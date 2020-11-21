@@ -97,9 +97,14 @@ services:
   web:
     image: nginxdemos/hello
     ports:
-    - "80:80"
+    - "9000:9000"
     restart: always
     command: [nginx-debug, '-g', 'daemon off;']
     network_mode: "host"
+  
+  app:
+     image: karthequian/gruyere:latest
+     ports:
+     - "80:8008"
 EOF
 sudo docker-compose up -d
