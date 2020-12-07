@@ -73,6 +73,9 @@ variable "backend01ext" {
   default = "10.90.2.101"
 }
 
+variable "consulvmext" {
+  default = "10.90.1.100"
+}
 # BIGIP Image
 variable "instance_type" {
   default = "Standard_DS4_v2"
