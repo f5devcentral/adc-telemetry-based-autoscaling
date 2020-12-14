@@ -1,0 +1,46 @@
+ {
+   "class": "Telemetry",
+   "controls": {
+     "class": "Controls",
+     "logLevel": "debug"
+   },
+   "My_Poller": {
+     "class": "Telemetry_System_Poller",
+     "interval": 60,
+     "actions": [{         
+        "includeData": {},
+        "locations": {
+            "avr": true  
+        }    
+      }]
+   },
+   "My_Listener": {
+     "class": "Telemetry_Listener",
+     "port": 6514
+   },
+   "My_Consumer": {
+      "class": "Telemetry_Consumer",
+      "type": "Azure_Log_Analytics",
+      "workspaceId": "98f2a593-bfc9-49e5-8389-45264d052d53",
+      "passphrase": {
+          "cipherText": "JpGxpCRgu4PDlIDYstx+E+/u/HWJ2wb4a23C8p1qAGgy+9ZCUCocNSPtmfMJXTL/WEh0IKHXeqi9MdNttJ410Q=="
+      },
+      "useManagedIdentity": false,
+      "region": "westus"
+    },
+    "My_Consumer2": {
+        "class": "Telemetry_Consumer",
+        "type": "Generic_HTTP",
+        "host": "172.16.60.111",
+        "protocol": "http",
+        "port": 8080,
+        "path": "/",
+        "method": "POST",
+        "headers": [
+            {
+                "name": "content-type",
+                "value": "application/json"
+            }
+        ]
+    }
+}
