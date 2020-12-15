@@ -100,10 +100,7 @@ const repoPath  ='/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to m
        console.error(err);
      });
  
-     response.statusCode = 200;
-     response.setHeader('Content-Type', 'application/json');
-     // Note: the 2 lines above could be replaced with this next one:
-     // response.writeHead(200, {'Content-Type': 'application/json'})
+     response.writeHead(200, {'Content-Type': 'application/json'})
  
      const responseBody = { headers, method, url, body };
  
