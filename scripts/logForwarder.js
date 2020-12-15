@@ -5,7 +5,7 @@ const https = require('https')
 const http = require('http');
 const args = process.argv.slice(2) //Required to authenticate with Github action repo
 
-const repoPath  ='/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to match designated github action repo
+const repoPath  = '/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to match designated github action repo
  
  /*  
  Create Listening server - receive alerts from analytics provider
@@ -49,7 +49,7 @@ const repoPath  ='/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to m
           break;
      } 
 
-     //Construct Github Action webhook payload
+    //Construct Github Action webhook payload
     const data2 = JSON.stringify({
         event_type: eventType,
         client_payload: {
@@ -111,6 +111,3 @@ const repoPath  ='/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to m
 
   // Start listener
   }).listen(8000);
-
-
-  
