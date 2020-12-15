@@ -27,20 +27,5 @@
       },
       "useManagedIdentity": false,
       "region": "westus"
-    },
-    "My_Consumer2": {
-        "class": "Telemetry_Consumer",
-        "type": "Generic_HTTP",
-        "host": "172.16.60.111",
-        "protocol": "http",
-        "port": 8080,
-        "path": "/",
-        "method": "POST",
-        "headers": [
-            {
-                "name": "content-type",
-                "value": "application/json"
-            }
-        ]
     }
 }
