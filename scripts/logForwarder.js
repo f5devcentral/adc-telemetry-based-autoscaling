@@ -56,10 +56,10 @@ const repoPath  = '/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to 
             cloud: n[1],
             rgGrpRgn: n[2],
             scaleName: n[3],
-            what_to_scale: what2Scale,
-            bigip_hostname: hostName, 
-            bigip_app: '',
-            webhook_source: 'azureloganalytics'
+            what2Scale: what2Scale,
+            bigipHostname: hostName, 
+            bigipApp: '',
+            webhookSource: 'azureloganalytics'
           }
         })
 
