@@ -1,8 +1,8 @@
-name: scale-in-aws
+name: can_scale-aws
 on:
   repository_dispatch:
     types: 
-      - scale-in-aws
+      - can_scale-aws
 
 jobs:
   build:
@@ -78,15 +78,15 @@ jobs:
       run: |
        echo "The difference between desired and capacity = ${{ steps.check.outputs.wanted_capacity }}"
        echo ::set-output name=new_size::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].DesiredCapacity' | xargs -I {} expr {} - 1)
-       echo ::set-output name=scale-in::'true'
+       echo ::set-output name=can_scale::'true'
 
     - name: scale in
-      if: ${{ steps.check_scale.outputs.scale-in == 'true' }}
+      if: ${{ steps.check_scale.outputs.can_scale == 'true' }}
       run: |
         echo "This is the new size ${{ steps.check_scale.outputs.new_size }}"
         aws autoscaling set-desired-capacity --auto-scaling-group-name ${{ github.event.client_payload.scaleName }} --desired-capacity ${{ steps.check_scale.outputs.new_size }}
    
 
     - name: can't scale
-      if: ${{ steps.check_scale.outputs.scale-in != 'true' }}
+      if: ${{ steps.check_scale.outputs.can_scale != 'true' }}
       run: echo "sorry, can't scale in because it would be lower than minimum size"
