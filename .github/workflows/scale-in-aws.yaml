@@ -1,0 +1,92 @@
+name: scale-in-aws
+on:
+  repository_dispatch:
+    types: 
+      - scale-in-aws
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: output webhook source
+      run: echo "The source of the webhook is = ${{ github.event.client_payload.webhookSource }}"
+    
+    # - name: install consul client
+    #   run: |
+    #     sh scripts/consul.sh
+    #     /usr/local/bin/consul version
+    
+    # - name: query consul server based on payload data
+    #   id: consul_query
+    #   run: /usr/local/bin/consul kv get -http-addr=`cat consul_host.txt` adpm/aws > consul-data.json
+
+    - name: parse client payload data for scaling
+      id: client_payload_data
+      run: |
+        echo ::set-output name=asg_name::${{ github.event.client_payload.scaleName }}
+        echo ::set-output name=region::${{ github.event.client_payload.rgGrpRgn }}
+
+    # - name: parse consul data for app scaling
+    #   if: ${{ github.event.client_payload.what_to_scale }} == "bigip"
+    #   id: consul_data_bigip
+    #   run: |
+    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq '.asg_name' > asg.json
+    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq -r '.region' > region.json
+
+    # - name: create output variables
+    #   id: consul_vars
+    #   run: |
+    #     echo ::set-output name=asg_name::$(cat ./asg.json)
+    #     echo ::set-output name=region::$(cat ./region.json)
+      
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ steps.client_payload_data.outputs.region }}
+
+    - name: query aws
+      run: |
+        aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name ${{ steps.client_payload_data.outputs.asg_name }} > autoscale-output.txt
+    - name: read autoscale output
+      run: cat autoscale-output.txt
+
+    - name: set autoscale variables
+      id: autoscale
+      run: |
+        echo ::set-output name=max_size::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].MaxSize')
+        echo ::set-output name=min_size::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].MinSize')
+        echo ::set-output name=desired_capacity::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].DesiredCapacity')
+
+    - name: check if can be scaled
+      id: check
+      run: |
+        echo ::set-output name=wanted_capacity::$(expr ${{ steps.autoscale.outputs.desired_capacity}} - 1)
+
+    - name: output difference
+      run: echo "The the new wanted capacity = ${{ steps.check.outputs.wanted_capacity }} and the min size = ${{ steps.autoscale.outputs.min_size}}"
+
+
+    - name: scale in if not below min 
+      id: check_scale
+      if: steps.check.outputs.wanted_capacity >= steps.autoscale.outputs.min_size
+      run: |
+       echo "The difference between desired and capacity = ${{ steps.check.outputs.wanted_capacity }}"
+       echo ::set-output name=new_size::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].DesiredCapacity' | xargs -I {} expr {} - 1)
+       echo ::set-output name=scale-in::'true'
+
+    - name: scale in
+      if: ${{ steps.check_scale.outputs.scale-in == 'true' }}
+      run: |
+        echo "This is the new size ${{ steps.check_scale.outputs.new_size }}"
+        aws autoscaling set-desired-capacity --auto-scaling-group-name ${{ github.event.client_payload.scaleName }} --desired-capacity ${{ steps.check_scale.outputs.new_size }}
+   
+
+    - name: can't scale
+      if: ${{ steps.check_scale.outputs.scale-in != 'true' }}
+      run: echo "sorry, can't scale in because it would be lower than minimum size"
