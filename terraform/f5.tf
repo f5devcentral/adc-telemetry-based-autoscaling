@@ -13,7 +13,7 @@ data "aws_ami" "f5_ami" {
   }
 }
 
-resource "aws_instance" "f5" {
+/*resource "aws_instance" "f5" {
 
   ami = "${data.aws_ami.f5_ami.id}"
   instance_type               = "m5.xlarge"
@@ -32,7 +32,7 @@ resource "aws_instance" "f5" {
   }
 
 }
-
+*/
 
 resource "aws_s3_bucket" "s3_bucket" {
   bucket_prefix = "${var.prefix}-s3bucket"
