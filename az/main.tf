@@ -22,12 +22,3 @@ resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}rg"
   location = var.location
 }
-
-# Create Log Analytic Workspace
-resource "azurerm_log_analytics_workspace" "law" {
-  name                = "${var.prefix}rg-law"
-  sku                 = "PerNode"
-  retention_in_days   = 300
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
-}
