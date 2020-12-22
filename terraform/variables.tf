@@ -1,6 +1,6 @@
 variable "prefix" {
   description = "prefix for resources created"
-  default     = "adp-scsdemo"
+  default     = "scsdemo-adpc1"
 }
 variable "region" {
   description = "AWS region"

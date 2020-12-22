@@ -19,10 +19,10 @@ data "aws_ami" "ubuntu" {
 }
 
 # Generate a tfvars file for AS3 installation
-data "template_file" "tfvars" {
+/*data "template_file" "tfvars" {
   template = "${file("../as3/terraform.tfvars.example")}"
   vars = {
-    addr     = "${aws_eip.f5.public_ip}",
+    addr     = "${aws_eip.f5asg.public_ip}",
     port     = "8443",
     username = "admin"
     pwd      = "${random_string.password.result}"
@@ -43,4 +43,4 @@ resource "local_file" "tfvars-b1" {
 resource "local_file" "tfvars-b2" {
   content  = "${data.template_file.tfvars.rendered}"
   filename = "../brownfield-approach/2-as3-shared-pool/terraform.tfvars"
-}
+}*/
