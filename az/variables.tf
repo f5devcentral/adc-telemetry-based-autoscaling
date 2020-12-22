@@ -1,13 +1,13 @@
 # Variables 
 # Azure Environment
-variable "sp_subscription_id" {}
-variable "sp_client_id" {}
-variable "sp_client_secret" {}
-variable "sp_tenant_id" {}
+variable "sp_subscription_id" {default = ""}
+variable "sp_client_id" {default = ""}
+variable "sp_client_secret" {default = ""}
+variable "sp_tenant_id" {default = ""}
 variable "prefix" {}
-variable "uname" {}
-variable "upassword" {}
-variable "location" {}
+variable "uname" {default = ""}
+variable "upassword" {default = ""}
+variable "location" {default = "westus"}
   
 
 # NETWORK
@@ -45,8 +45,8 @@ variable "onboard_log" { default = "/var/log/startup-script.log" }
 
 # BIGIQ License Manager Setup
 variable "bigIqHost" { default = "200.200.200.200" }
-variable "bigIqUsername" {}
-variable "bigIqPassword" {}
+variable "bigIqUsername" {default = "azureuser"}
+variable "bigIqPassword" {default = ""}
 variable "bigIqLicenseType" { default = "licensePool" }
 variable "bigIqLicensePool" { default = "myPool" }
 variable "bigIqSkuKeyword1" { default = "key1" }

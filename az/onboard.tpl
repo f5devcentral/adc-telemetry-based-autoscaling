@@ -227,4 +227,9 @@ echo -e "\n"$(date) "Removing DO and AS3 declaration files"
 # rm -rf /config/do.json /config/as3.json /config/ts.json
 
 # Done
+
+# Enable AVR logging
+echo -e "\n"$(date) "posting AVR  TMSH command"
+tmsh modify analytics global-settings { external-logging-publisher /DemoTenant/DemoApp/telemetry_publisher offbox-protocol hsl use-offbox enabled  }
+
 echo -e "\n"$(date) "===Onboard Complete==="

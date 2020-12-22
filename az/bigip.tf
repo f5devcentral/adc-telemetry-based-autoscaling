@@ -258,8 +258,6 @@ data "template_file" "ts_json" {
 
   vars = {
     region      = var.location
-    law_id      = azurerm_log_analytics_workspace.law.workspace_id
-    law_primkey = azurerm_log_analytics_workspace.law.primary_shared_key
   }
 }
  
@@ -346,7 +344,7 @@ resource "azurerm_linux_virtual_machine_scale_set" "f5vmss" {
 }
 
 resource "azurerm_monitor_autoscale_setting" "f5vmss" {
-  name                = "myAutoscaleSetting_f5vmss"
+  name                = "${var.prefix}rg-f5vmss"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   target_resource_id  = azurerm_linux_virtual_machine_scale_set.f5vmss.id
@@ -357,55 +355,7 @@ resource "azurerm_monitor_autoscale_setting" "f5vmss" {
     capacity {
       default = 1
       minimum = 1
-      maximum = 10
-    }
-
-    rule {
-      metric_trigger {
-        metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_linux_virtual_machine_scale_set.f5vmss.id
-        time_grain         = "PT1M"
-        statistic          = "Average"
-        time_window        = "PT5M"
-        time_aggregation   = "Average"
-        operator           = "GreaterThan"
-        threshold          = 75
-      }
-
-      scale_action {
-        direction = "Increase"
-        type      = "ChangeCount"
-        value     = "1"
-        cooldown  = "PT1M"
-      }
-    }
-
-    rule {
-      metric_trigger {
-        metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_linux_virtual_machine_scale_set.f5vmss.id
-        time_grain         = "PT1M"
-        statistic          = "Average"
-        time_window        = "PT5M"
-        time_aggregation   = "Average"
-        operator           = "LessThan"
-        threshold          = 25
-      }
-
-      scale_action {
-        direction = "Decrease"
-        type      = "ChangeCount"
-        value     = "1"
-        cooldown  = "PT1M"
-      }
-    }
-  }
-
-  notification {
-    email {
-      send_to_subscription_administrator    = true
-      send_to_subscription_co_administrator = true
-      custom_emails                         = ["admin@contoso.com"]
+      maximum = 5
     }
   }
 }
