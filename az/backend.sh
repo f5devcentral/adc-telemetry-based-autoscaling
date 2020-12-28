@@ -1,11 +1,10 @@
 #!/bin/bash
 
+#Utils
+sudo apt-get install -y unzip jq
+
 #Get IP
 local_ipv4=`echo $(curl -s -f -H Metadata:true "http://169.254.169.254/metadata/instance/network/interface?api-version=2019-06-01" | jq -r '.[1].ipv4[]' | grep private | awk '{print $2}' | awk -F \" '{print $2}') | awk '{print $1}'`
-
-
-#Utils
-sudo apt-get install unzip
 
 #Download Consul
 CONSUL_VERSION="1.9.0"
@@ -31,7 +30,6 @@ Documentation=https://www.consul.io/
 Requires=network-online.target
 After=network-online.target
 ConditionFileNotEmpty=/etc/consul.d/consul.hcl
-
 [Service]
 User=consul
 Group=consul
@@ -40,7 +38,6 @@ ExecReload=/usr/local/bin/consul reload
 KillMode=process
 Restart=always
 LimitNOFILE=65536
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -52,14 +49,14 @@ sudo chown --recursive consul:consul /etc/consul.d
 sudo chmod 640 /etc/consul.d/consul.hcl
 
 cat << EOF > /etc/consul.d/consul.hcl
-datacenter = "dc1"local_
+datacenter = "dc1"
 data_dir = "/opt/consul"
 ui = true
 EOF
 
 cat << EOF > /etc/consul.d/client.hcl
 advertise_addr = "${local_ipv4}"
-retry_join = ["provider=azure tag_name=Env tag_value=consul tenant_id=... client_id=xxxxxxx subscription_id=.. secret_access_key=..."]
+retry_join = ["10.90.2.100"]
 EOF
 
 cat << EOF > /etc/consul.d/nginx.json
