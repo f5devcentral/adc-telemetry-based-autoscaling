@@ -37,17 +37,9 @@
 					],
 					"members": [{
 						"servicePort": 80,
-						"addressDiscovery": "azure",
+						"addressDiscovery": "consul",
 						"updateInterval": 10,
-						"tagKey": "application",
-						"tagValue": "app1",
-						"addressRealm": "private",
-						"resourceGroup": "${rg_name}",
-						"subscriptionId": "${subscription_id}",
-						"directoryId": "${tenant_id}",
-						"applicationId": "${client_id}",
-						"apiAccessKey": "${client_secret}",
-						"credentialUpdate": false
+						"uri": "http://10.90.2.100:8500/v1/catalog/service/nginx"
 					}]
 				},
 				"telemetry_local_rule": {
