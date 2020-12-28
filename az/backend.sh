@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #Utils
+sudo apt update
 sudo apt-get install -y unzip jq
 
 #Get IP
