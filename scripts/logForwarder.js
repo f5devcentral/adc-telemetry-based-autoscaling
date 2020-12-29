@@ -5,7 +5,7 @@ const https = require('https')
 const http = require('http');
 const args = process.argv.slice(2) //Required to authenticate with Github action repo
 
-const repoPath  = '/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to match designated github action repo
+const repoPath  = '/repos/f5devcentral/adc_perfomance_monitoring/dispatches'  //Modify to match designated github action repo
  
  /*  
  Create Listening server - receive alerts from analytics provider
@@ -24,42 +24,53 @@ const repoPath  = '/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to 
      body = Buffer.concat(body).toString();
      bodyJson = JSON.parse(body);
      scaleAction = bodyJson.scaleAction;
-     hostName = bodyJson.SearchResults.tables[0].rows[0].toString();
-     
-     //Convert hostname to array and derive identifiers from hostname
+     vals = bodyJson.SearchResults.tables[0].rows[0].toString();
+     v = vals.split(",");
+     console.log(vals);
+
+     hostName = v[0];
+     poolName = v[1];
+
+     //Convert hostName and poolName to arrays and derive identifiers
      var n = hostName.split(".");
-     
-     //Create scaling eventtyp
+
+     rgGrpRgn = n[2];
+
+     //Create scaling eventtype
      switch (scaleAction) {
        case "scaleOutBigip":
           what2Scale = 'bigip';
           eventType = 'scale-out-' + n[1]
+          scaleName = n[2] + '-' + (n[3].slice(0, -1));
           break;
       case "scaleInBigip":
           what2Scale = 'bigip';
           eventType = 'scale-in-' + n[1]
+          scaleName = n[2] + '-' + (n[3].slice(0, -1));
           break;
-      case "scaleOutApp":
+      case "scaleOutWorkload":
           what2Scale = 'app';
-          eventType = 'scale-out-' + n[1]   
+          eventType = 'scale-out-' + n[1]
+          var p = poolName.split("/");
+          scaleName = p[3];   
           break;
-      case "scaleInApp":
+      case "scaleInWorkload":
           what2Scale = 'app';
           eventType = 'scale-in-' + n[1]
+          var p = poolName.split("/");
+          scaleName = p[3];
           break;
      } 
+
+    console.log(scaleName);
 
     //Construct Github Action webhook payload
     const data2 = JSON.stringify({
         event_type: eventType,
         client_payload: {
-            cloud: n[1],
-            rgGrpRgn: n[2],
-            scaleName: n[3],
-            what2Scale: what2Scale,
-            bigipHostname: hostName, 
-            bigipApp: '',
-            webhookSource: 'azureloganalytics'
+            rgGrpRgn: rgGrpRgn,
+            scaleName: scaleName,
+            webhookSource: 'azureLogAnalytics'
           }
         })
 
@@ -111,3 +122,4 @@ const repoPath  = '/repos/gregcoward/adcpm-automationn/dispatches'  //Modify to 
 
   // Start listener
   }).listen(8000);
+
