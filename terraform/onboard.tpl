@@ -41,9 +41,9 @@ sleep 60
 
 # Variables
 admin_username='${admin_user}'
-echo -e "\n"$(admin_username) "++++++ username "
+echo -e "\n"$admin_username "++++++ username "
 admin_password='${admin_password}'
-echo -e "\n"$(admin_password) "++++++ password "
+echo -e "\n"$admin_password "++++++ password "
 
 CREDS="admin:"$admin_password
 DO_URL='${DO_URL}'
