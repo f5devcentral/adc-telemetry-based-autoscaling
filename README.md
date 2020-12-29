@@ -1,5 +1,5 @@
 # ADC Performance Monitoring 
-The ADC Performance Monitoring, (ADPM) repository deploys a demonstration environment illustrating [F5's Automation Toolchain](https://clouddocs.f5.com/) integrating with a third party analytics provider(s) to provide cloud-agnostic centralized monitoring, and management of application delivery controllers.  The demonstration is designed to be connected to exsiting third-party analytics providers.  Examples for Azure Log Analytics and ELK stack integrations are included.
+The ADC Performance Monitoring, (ADPM) repository deploys a demonstration environment illustrating [F5's Automation Toolchain](https://clouddocs.f5.com/) integrating with a third party analytics provider(s) to provide cloud-agnostic centralized application delivery monitoring and management.  The current POC illustrates simple scaling of delivery controllers, (F5 BIG-IP VE) as well as backend workloads.  The demonstration is designed to be connected to exsiting third-party analytics providers.  Examples for Azure Log Analytics and ELK stack integrations are included.
 
 <img src="images/diagram.png" alt="Italian Trulli">
 
