@@ -3,12 +3,20 @@ The ADC Performance Monitoring, (ADPM) repository deploys a demonstration enviro
 
 <img src="images/diagram.png" alt="Italian Trulli">
 
+The repository includes Terraform projects to deploy fully functioning application stacks. To deploy the Terraform projects, the following prerequsites and inputs are required:
+
+### Prerequisites
+
+### Inputs
+
+
 The POC utilizes the following vendor products/services:
 
 #### F5 / Backend Application
   * BIG-IP VE – Application Delivery 
   * Telemetry Streaming, (TS) with custom endpoints
   * Application Services 3 Extension, (AS3)
+  * F5 Terraform Provider
   * NGINX OSS
   
 #### GitHub 
@@ -20,7 +28,7 @@ The POC utilizes the following vendor products/services:
   * Consul - Backend workload service discovery 
 
 #### Elastic.co
-  * ELK Stack -  - Log Ingestion, Metrics aggr/indexing, Visualization, Alerting
+  * ELK Stack - Log Ingestion, Metrics aggr/indexing, Visualization, Alerting
 
 #### Azure
  * ARM – Application stack hosting w/native autoscaling
