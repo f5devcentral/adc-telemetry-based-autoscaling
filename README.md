@@ -1,6 +1,7 @@
-<img src="images/mainpic.png" alt="Italian Trulli">
+<img src="images/diagram.png" alt="Italian Trulli">
 
-### The POC utilizes the following vendor products/services
+
+The POC utilizes the following vendor products/services:
 
 #### F5 / Backend Application
   * BIG-IP VE – Application Delivery 
