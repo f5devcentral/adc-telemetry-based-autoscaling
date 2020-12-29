@@ -49,17 +49,18 @@ resource "aws_iam_role_policy" "bigip" {
   name = "${var.prefix}-f5-bigip-policy"
   role = "${aws_iam_role.bigip.id}"
 
-  policy = <<EOF
+   policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
     {
       "Action": [
-        "s3:GetObject",
-        "s3:DeleteObject"	
+        "ec2:DescribeInstances",
+        "ec2:DescribeTags",
+        "autoscaling:DescribeAutoScalingGroups"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${aws_s3_bucket.s3_bucket.id}/admin.shadow"
+      "Resource": "*"
     }
   ]
 }
@@ -69,7 +70,7 @@ EOF
 resource "aws_iam_role" "bigip" {
   name = "${var.prefix}-f5-bigip-role"
 
-  assume_role_policy = <<EOF
+   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
