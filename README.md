@@ -34,7 +34,9 @@ The POC utilizes the following vendor products/services:
  * ARM – Application stack hosting w/native autoscaling
  * LogForwarder Server, (Ubunu 18.04 vm)
  * Azure Log Anaytics - Log Ingestion, Metrics aggr/indexing, Visualization, Alerting
-
+ 
 #### AWS
   * EC2 – Application stack hosting w/native autoscaling
   * Route53 – DNS 
+
+<img src="images/usecases.png" alt="Italian Trulli">
