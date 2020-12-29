@@ -3,13 +3,6 @@ The ADC Performance Monitoring, (ADPM) repository deploys a demonstration enviro
 
 <img src="images/diagram.png" alt="Italian Trulli">
 
-The repository includes Terraform projects to deploy fully functioning application stacks. To deploy the Terraform projects, the following prerequsites and inputs are required:
-
-### Prerequisites
-
-### Inputs
-
-
 The POC utilizes the following vendor products/services:
 
 #### F5 / Backend Application
@@ -38,5 +31,11 @@ The POC utilizes the following vendor products/services:
 #### AWS
   * EC2 – Application stack hosting w/native autoscaling
   * Route53 – DNS 
+  The repository includes Terraform projects to deploy fully functioning application stacks. To deploy the Terraform projects, the following prerequsites and inputs are required:
 
+## Prerequisites
+
+## Inputs
+
+ 
 <img src="images/usecases.png" alt="Italian Trulli">
