@@ -10,7 +10,7 @@ data "aws_ami" "f5_ami" {
 
 
 resource "aws_autoscaling_group" "f5asg" {
-  name                 = "${var.prefix}-f5asg"
+  name                 = "${var.prefix}f5asg"
   launch_configuration = "${aws_launch_configuration.f5asg.name}"
   desired_capacity     = 2
   min_size             = 1
@@ -24,7 +24,7 @@ resource "aws_autoscaling_group" "f5asg" {
   tags = [
     {
       key                 = "Name"
-      value               = "${var.prefix}-f5asg"
+      value               = "${var.prefix}f5asg"
       propagate_at_launch = true
     },
     {
@@ -37,7 +37,7 @@ resource "aws_autoscaling_group" "f5asg" {
 }
 
 resource "aws_launch_configuration" "f5asg" {
-  name_prefix                 = "${var.prefix}-f5asg-"
+  name_prefix                 = "${var.prefix}f5asg"
   image_id                    = "${data.aws_ami.f5_ami.id}"
   instance_type               = "m5.xlarge"
   associate_public_ip_address = true
@@ -75,6 +75,7 @@ data "template_file" "vm01_do_json" {
 
   vars = {
     local_host         = "-device.hostname-"
+    hostname           = "bigip.aws.${var.region}.${var.prefix}f5asg.com"
     local_selfip       = "-external-self-address-"
     gateway            = var.ext_gw
     dns_server         = var.dns_server
@@ -89,6 +90,7 @@ data "template_file" "vm01_do_json" {
     bigIqSkuKeyword2   = var.bigIqSkuKeyword2
     bigIqUnitOfMeasure = var.bigIqUnitOfMeasure
     bigIqHypervisor    = var.bigIqHypervisor
+    region             = var.region
   }
 }
 
