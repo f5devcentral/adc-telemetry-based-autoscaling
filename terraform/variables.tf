@@ -1,10 +1,7 @@
-variable "prefix" {
-  description = "prefix for resources created"
-  default     = "scsdemo-adpc2"
-}
+variable "prefix" {}
 variable "region" {
   description = "AWS region"
-  default     = "us-east-1"
+  default     = "us-west-1"
 }
 
 variable "f5_ami_search_name" {
@@ -22,7 +19,7 @@ variable "allow_from" {
  
 variable "uname" {default = ""}
 variable "upassword" {default = ""}
-variable "location" {default = "us-east-1"}
+variable "location" {default = "us-west-1"}
   
 
 # NETWORK
