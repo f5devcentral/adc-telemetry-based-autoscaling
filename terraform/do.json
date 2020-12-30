@@ -5,7 +5,7 @@
     "label": "Onboard BIG-IP",
     "Common": {
         "class": "Tenant",
-        "hostname": "bigip.aws.com",
+        "hostname": "${hostname}",
         "dbVars": {
             "class": "DbVariables",
             "ui.advisory.enabled": true,
