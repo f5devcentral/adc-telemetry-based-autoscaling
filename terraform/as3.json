@@ -23,7 +23,7 @@
 				"template": "https",
 				"serviceMain": {
 					"class": "Service_HTTPS",
-					"virtualPort": 8443,
+					"virtualPort": 8080,
 					"virtualAddresses": [
 						"0.0.0.0"
 					],

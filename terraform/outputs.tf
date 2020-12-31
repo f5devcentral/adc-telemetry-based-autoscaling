@@ -17,3 +17,7 @@ output "F5_Username" {
 output "Consul_UI" {
   value = "http://${aws_instance.consul.public_ip}:8500"
 }
+output "clb_dns_name" {
+  value       = aws_elb.adcpe-elb.dns_name
+  description = "The domain name of the load balancer"
+}
