@@ -21,9 +21,9 @@
    "My_Azure_Consumer": {
       "class": "Telemetry_Consumer",
       "type": "Azure_Log_Analytics",
-      "workspaceId": "98f2a593-bfc9-49e5-8389-45264d052d53",
+      "workspaceId": "",
       "passphrase": {
-          "cipherText": "JpGxpCRgu4PDlIDYstx+E+/u/HWJ2wb4a23C8p1qAGgy+9ZCUCocNSPtmfMJXTL/WEh0IKHXeqi9MdNttJ410Q=="
+          "cipherText": ""
       },
       "useManagedIdentity": false,
       "region": "westus"
