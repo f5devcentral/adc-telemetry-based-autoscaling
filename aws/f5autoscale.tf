@@ -101,7 +101,9 @@ data "template_file" "as3_json" {
     backendvm_ip    = var.backend01ext
     web_pool        = "myapp-${var.app}"
     tls_cert        = var.tls_cert
-    tls_pswd        = var.tls_pswd
+    tls_key        = var.tls_key
+    cipherText      = var.cipherText
+    protectedVal    = var.protectedVal
   }
 }
 

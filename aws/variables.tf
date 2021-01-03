@@ -5,13 +5,17 @@ variable "region" {
   default     = "us-west-1"
 }
 
-variable "tls_cert" {}       
-variable "tls_pswd" {} 
+variable "tls_cert" {default = ""}       
+variable "tls_key" {default = ""} 
+variable "tls_cert" {default = ""}       
+variable "tls_key" {default = ""} 
+variable "cipherText" {default = ""}
+variable "protectedVal" {default = ""}
 
-variable "logStashIP" {}
-variable "logStashPort" {}
-variable wrkspaceID {}
-variable passphrase {}
+variable "logStashIP" {default = ""}
+variable "logStashPort" {default = ""}
+variable wrkspaceID {default = ""}
+variable passphrase {default = ""}
 
 variable "f5_ami_search_name" {
   description = "BIG-IP AMI name to search for"
