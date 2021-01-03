@@ -1,3 +1,16 @@
+#!/bin/bash
+
+#Utils
+sudo apt update && sudo apt install nodejs -y && sudo apt install npm -y
+
+sudo npm install express
+sudo npm install body-parser
+sudo npm install request
+sudo npm install http
+sudo npm install https
+
+
+sudo cat << EOF > /home/ubuntu/alertForwarder.js
 const express = require( 'express' );
 const app = express();
 const bodyParser = require('body-parser');
@@ -142,4 +155,6 @@ const repoPath  = '/repos/f5devcentral/adc_perfomance_monitoring/dispatches'  //
 
   // Start listener
   }).listen(8000);
+EOF
+
 
