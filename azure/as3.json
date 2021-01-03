@@ -23,7 +23,7 @@
 				"template": "https",
 				"serviceMain": {
 					"class": "Service_HTTPS",
-					"virtualPort": 8443,
+					"virtualPort": 8080,
 					"virtualAddresses": [
 						"0.0.0.0"
 					],
@@ -39,7 +39,7 @@
 						"servicePort": 80,
 						"addressDiscovery": "consul",
 						"updateInterval": 10,
-						"uri": "http://10.90.2.100:8500/v1/catalog/service/nginx"
+						"uri": "http://10.0.0.100:8500/v1/catalog/service/nginx"
 					}]
 				},
 				"telemetry_local_rule": {
@@ -101,12 +101,8 @@
 				"webcert": {
 					"class": "Certificate",
 					"remark": "in practice we recommend using a passphrase",
-					"certificate": "",
-					"privateKey": "",
-					"passphrase": {
-						"ciphertext": "",
-						"protected": ""
-					}
+					"certificate": "${tls_cert}",
+					"privateKey": "${tls_pswd}"
 				}
 			}
 		}
