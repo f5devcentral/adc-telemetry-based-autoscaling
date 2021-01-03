@@ -1,0 +1,6 @@
+# BIG-IP Environment
+uname      = "awsuser"
+upassword  = "yyyyidefault12345!"
+
+# Prefix for objects being created
+prefix = "xxx"
