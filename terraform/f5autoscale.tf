@@ -16,7 +16,6 @@ resource "aws_autoscaling_group" "f5asg" {
   min_size             = 1
   max_size             = 4
   vpc_zone_identifier  = ["${module.vpc.public_subnets[0]}"]
-  load_balancers    = [aws_elb.adcpe-elb.name]
   health_check_type = "ELB"
 
   lifecycle {
