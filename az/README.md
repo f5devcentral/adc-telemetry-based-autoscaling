@@ -1,1 +1,1 @@
-<img src="../images/azureelk.png" alt="Italian Trulli">
+<img src="../images/azurelaw.png" alt="Italian Trulli">
