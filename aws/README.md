@@ -1,3 +1,5 @@
+<img src="../images/awselk.png" alt="Italian Trulli">
+
 ## Deployment Overview and Prerequisites
 The 'aws' Terraform project deploys a single-tiered sample application onto the AWS platform.  The appication is designed to provde telemetry data to a preconfigured analytics provider.  Sample alert configurations and TS configuration examples are included for both Elastic's ELK stack and Azure Log Analytics.  Alert configuration steps, (with relevant screenshorts are available in the 'docs' folder.  The 
 
@@ -5,9 +7,6 @@ The 'aws' Terraform project deploys a single-tiered sample application onto the 
 * Backend Workload - (NGINX deployed into scale group), (default = 2, min = 1, max = 5)
 * Consul server (VM)
 * Alert Forwarding (VM)
-
-<img src="../images/awselk.png" alt="Italian Trulli">
-
 
 ### TERRAFORM INPUTS
 The following values will be required to deploy, (either entered during apply or updated via variables.tf). Additional value can be updated via the terraform.tfvars file.  A sample tfvars file isincluded for referenc.
