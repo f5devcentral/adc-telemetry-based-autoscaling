@@ -16,8 +16,8 @@ The 'aws' Terraform project deploys a single-tiered sample application onto the 
 
 #### Telemetry Variables
 If using Azure Log Analytics:
-* wrkspaceID = <Azure Log Analytics workspace ID>
-* passPhrase = <Azure Log Analytics passphrase>
+* wrkspaceID = {default = ""}          - Azure Log Analytics workspace ID
+* passPhrase = {default = ""}          - Azure Log Analytics passphrase
 
 If using Elastic ELK stack, (telemtry streaming via logstash)
 
@@ -38,8 +38,10 @@ If using Elastic ELK stack, (telemtry streaming via logstash)
 4. Copy the contents of either 'tsAzureLog.json' or 'tsELK.json' to 'ts.json'; depending upon which analytics provider utilized.
 5. Deploy Terraform project.  Upon a successful deployment a local private key, 'terraform-xxxxxxxxxxxxx.pem' will be creaete in the current directory.  This key will be used to access both the BIG-IP(s) to set the initial admin password.  Additionally, you will SSH access to AlertForwarder server to start the forwarding service.
 
-6. Once Terraform has completed, use provided output variables to access the AlertForwarder server; (Ex: ssh ubuntu@53.24.231.12 -i terraform-xxxxxxxxxxxxx.pem)
+6. Once Terraform has completed, use provided output variables to access the AlertForwarder server -  (Ex: ssh ubuntu@53.24.231.12 -i terraform-xxxxxxxxxxxxx.pem)
 7. To start the AlertForwarding service, you will need to provide a Personal Access Token for the repository where the GitHub actions are deployed.
+8. Start AlertForwarding service -  (Ex: nodejs alertForwarder.js asdfasdfadasasdfasdfasfaswreddsw).
+9. Configure Appropriate Alerts via vendor UI.
 
 
 
