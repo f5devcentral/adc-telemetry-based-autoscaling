@@ -9,14 +9,14 @@ data "aws_availability_zones" "available" {
 resource "aws_subnet" "primary" {
   availability_zone = data.aws_availability_zones.available.names[0]
  vpc_id = "${module.vpc.vpc_id}"
- cidr_block = "11.0.0.0/16"
+ cidr_block = "10.1.0.0/16"
   # ...
 }
 
 resource "aws_subnet" "secondary" {
   availability_zone = data.aws_availability_zones.available.names[1]
  vpc_id = "${module.vpc.vpc_id}"
- cidr_block = "11.0.0.0/16"
+ cidr_block = "10.2.0.0/16"
   # ...
 }
 
