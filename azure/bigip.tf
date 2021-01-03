@@ -123,6 +123,19 @@ resource "azurerm_network_security_group" "main" {
   }
 
   security_rule {
+    name                       = "allow_8000"
+    description                = "Allow alertForwarder Access"
+    priority                   = 185
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "8000"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
     name                       = "allow_8301_udp"
     description                = "Allow Consul Access"
     priority                   = 181
@@ -236,28 +249,27 @@ data "template_file" "vm01_do_json" {
   }
 }
 
- 
-
 data "template_file" "as3_json" {
   template = file("${path.module}/as3.json")
-
   vars = {
-    rg_name         = azurerm_resource_group.main.name
-    subscription_id = var.sp_subscription_id
-    tenant_id       = var.sp_tenant_id
-    client_id       = var.sp_client_id
-    client_secret   = var.sp_client_secret
     backendvm_ip    = var.backend01ext
     web_pool        = "myapp-${var.app}"
-
+    tls_cert        = var.tls_cert
+    tls_key        = var.tls_key
+    cipherText      = var.cipherText
+    protectedVal    = var.protectedVal
   }
 }
 
-data "template_file" "ts_json" {
+  data "template_file" "ts_json" {
   template = file("${path.module}/ts.json")
 
   vars = {
     region      = var.location
+    logStashIP  = var.logStashIP
+    logStashPort = var.logStashPort
+    wrkspaceID  = var.wrkspaceID
+    passphrase  = var.passphrase
   }
 }
  

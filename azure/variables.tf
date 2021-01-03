@@ -4,11 +4,21 @@ variable "sp_subscription_id" {default = ""}
 variable "sp_client_id" {default = ""}
 variable "sp_client_secret" {default = ""}
 variable "sp_tenant_id" {default = ""}
-variable "prefix" {}
-variable "uname" {default = ""}
+variable "prefix" {default = ""}
+variable "uname" {default = "azureuser"}
 variable "upassword" {default = ""}
 variable "location" {default = "westus"}
   
+variable "tls_cert" {default = ""}       
+variable "tls_key" {default = ""} 
+variable "cipherText" {default = ""}
+variable "protectedVal" {default = ""}
+
+variable "logStashIP" {default = ""}
+variable "logStashPort" {default = ""}
+variable wrkspaceID {default = ""}
+variable passphrase {default = ""}
+
 
 # NETWORK
 variable "cidr" { default = "10.90.0.0/16" }
@@ -64,3 +74,8 @@ variable "application" { default = "f5app" }
 
 # CONSUL Setup
 variable "consulvmext" { default = "10.90.2.100" }
+
+# AlertForwarder Setup
+variable "alertForwardervmext" { default = "10.90.2.115" }
+
+

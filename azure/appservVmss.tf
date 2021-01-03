@@ -1,7 +1,3 @@
-
-
-
-
 # Create Backend VMSS for App
 resource "azurerm_linux_virtual_machine_scale_set" "backendvmss" {
   name                            = "myapp-${var.app}"
