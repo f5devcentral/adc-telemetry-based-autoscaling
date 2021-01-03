@@ -95,22 +95,24 @@ data "template_file" "vm01_do_json" {
   }
 }
 
- 
-
 data "template_file" "as3_json" {
   template = file("${path.module}/as3.json")
-vars = {
+  vars = {
     backendvm_ip    = var.backend01ext
     web_pool        = "myapp-${var.app}"
-
+    tls_cert        = var.tls_cert
+    tls_pswd        = var.tls_pswd
   }
-
-  }
+}
 
   data "template_file" "ts_json" {
   template = file("${path.module}/ts.json")
 
   vars = {
     region      = var.location
+    logStashIP  = var.logStashIP
+    logStashPort = var.logStashPort
+    wrkspaceID  = var.wrkspaceID
+    passphrase  = var.passphrase
   }
 }

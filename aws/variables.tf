@@ -5,6 +5,14 @@ variable "region" {
   default     = "us-west-1"
 }
 
+variable "tls_cert" {}       
+variable "tls_pswd" {} 
+
+variable "logStashIP" {}
+variable "logStashPort" {}
+variable wrkspaceID {}
+variable passphrase {}
+
 variable "f5_ami_search_name" {
   description = "BIG-IP AMI name to search for"
   type        = string
@@ -58,7 +66,7 @@ variable "onboard_log" { default = "/var/log/startup-script.log" }
 
 # BIGIQ License Manager Setup
 variable "bigIqHost" { default = "200.200.200.200" }
-variable "bigIqUsername" {default = "azureuser"}
+variable "bigIqUsername" {default = ""}
 variable "bigIqPassword" {default = ""}
 variable "bigIqLicenseType" { default = "licensePool" }
 variable "bigIqLicensePool" { default = "myPool" }

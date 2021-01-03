@@ -101,12 +101,8 @@
 				"webcert": {
 					"class": "Certificate",
 					"remark": "in practice we recommend using a passphrase",
-					"certificate": "-----BEGIN CERTIFICATE----- ....",
-					"privateKey": "-----BEGIN RSA PRIVATE KEY---....",
-					"passphrase": {
-						"ciphertext": "",
-						"protected": ""
-					}
+					"certificate": "${tls_cert}",
+					"privateKey": "${tls_pswd}"
 				}
 			}
 		}
