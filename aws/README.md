@@ -25,16 +25,24 @@ If using Elastic ELK stack, (telemtry streaming via logstash)
 * logStashPort {default = ""}        - Logstash listening Port
 
 ## Prerequisites
-* To fully utilize the ADPM environment, a supported third party analytics system must be available for telemetry data ingestion/monitoring/alerting.  The 'docs' folder includes basic steps for configuring relevant alerts and actions for:
+* Supported third party analytics system must be available for telemetry data ingestion/monitoring/alerting.  The 'docs' folder includes basic steps for configuring relevant alerts and actions for:
   * Azure Log Analytics
   * Elastic ELK Stack
+  
 * Terraform Environment
   
 ## Deployment Steps
-1. Clone Repository - git clone https://github.com/f5devcentral/adc_perfomance_monitoring.git
+1. Clone Repository - git clone https://github.com/f5devcentral/adc_perfomance_monitoring.git to a new GitHub repository Since the ADPM system utilizes GitHub Actions for automation, (at a minium, the '.github/workflows' folder must hosted in a Github repository.
 2. Navigate to desired subfolder - (aws or Azure)
 3. Modify 'variables.tf' file and provide values for above listed variables.  Alternatively, you can utilize a terraform.tfvars file.
-4. 
+4. Copy the contents of either 'tsAzureLog.json' or 'tsELK.json' to 'ts.json'; depending upon which analytics provider utilized.
+5. Deploy Terraform project.  Upon a successful deployment a local private key, 'terraform-xxxxxxxxxxxxx.pem' will be creaete in the current directory.  This key will be used to access both the BIG-IP(s) to set the initial admin password.  Additionally, you will SSH access to AlertForwarder server to start the forwarding service.
+
+6. Once Terraform has completed, use provided output variables to access the AlertForwarder server; (Ex: ssh ubuntu@53.24.231.12 -i terraform-xxxxxxxxxxxxx.pem)
+7. To start the AlertForwarding service, you will need to provide a Personal Access Token for the repository where the GitHub actions are deployed.
+
+
+
 
 
 
