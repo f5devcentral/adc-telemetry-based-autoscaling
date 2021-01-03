@@ -8,13 +8,11 @@ The 'aws' Terraform project deploys a single-tiered sample application onto the 
 * Consul server (VM)
 * Alert Forwarding (VM)
 
-### TERRAFORM INPUTS
-The following values will be required to deploy, (either entered during apply or updated via variables.tf). Additional value can be updated via the terraform.tfvars file.  A sample tfvars file isincluded for referenc.
-
-#### Application Variables
-* prefix =  <string value prepended to all created resources>  
-* tls_cert = <base64 encoded certiificate string>
-* tls_pswd = <base64 encoded password>
+### Variables 
+* "prefix" {}                         -  Prefix to be appended to all Azure created resources
+* "tls_cert" {default = ""}           -  base64 encoded certiificate
+* "tls_pswd" {default = ""}           -  base64 encoded key
+* "region"   {default = "us-west-1"}  _  AWS deployment region
 
 #### Telemetry Variables
 * wrkspace_id = <Azure Log Analytics workspace ID>
