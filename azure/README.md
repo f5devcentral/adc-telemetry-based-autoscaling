@@ -13,6 +13,8 @@ The 'aws' Terraform project deploys a single-tiered sample application onto the 
 * "sp_client_id" {default = ""}          -  Azure Client/App ID
 * "sp_client_secret" {default = ""}      -  Azure Secret
 * "sp_tenant_id" {default = ""}          -  Azure Tenant ID
+* "tls_cert" {default = ""}           -  base64 encoded certiificate
+* "tls_key" {default = ""}           -  base64 encoded key
 * "prefix" {}                            -  Prefix to be appended to all Azure created resources
 * "uname" {default = ""}        -  Backend server username
 * "upassword" {default = ""}   -  Backend server password
