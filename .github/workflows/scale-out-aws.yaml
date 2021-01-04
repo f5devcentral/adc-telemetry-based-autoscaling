@@ -13,36 +13,16 @@ jobs:
       uses: actions/checkout@v2
 
     - name: output webhook source
-      run: echo "The source of the webhook is = ${{ github.event.client_payload.webhookSource }}"
-    
-    # - name: install consul client
-    #   run: |
-    #     sh scripts/consul.sh
-    #     /usr/local/bin/consul version
-    
-    # - name: query consul server based on payload data
-    #   id: consul_query
-    #   run: /usr/local/bin/consul kv get -http-addr=`cat consul_host.txt` adpm/aws > consul-data.json
-
+      run: |
+        echo "The webhook payload contents are ${{ github.event.client_payload }}"
+        echo "The source of the webhook is = ${{ github.event.client_payload.webhookSource }}"
+ 
     - name: parse client payload data for scaling
       id: client_payload_data
       run: |
         echo ::set-output name=asg_name::${{ github.event.client_payload.scaleName }}
         echo ::set-output name=region::${{ github.event.client_payload.rgGrpRgn }}
-
-    # - name: parse consul data for app scaling
-    #   if: ${{ github.event.client_payload.what_to_scale }} == "bigip"
-    #   id: consul_data_bigip
-    #   run: |
-    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq '.asg_name' > asg.json
-    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq -r '.region' > region.json
-
-    # - name: create output variables
-    #   id: consul_vars
-    #   run: |
-    #     echo ::set-output name=asg_name::$(cat ./asg.json)
-    #     echo ::set-output name=region::$(cat ./region.json)
-      
+ 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -53,6 +33,7 @@ jobs:
     - name: query aws
       run: |
         aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name ${{ steps.client_payload_data.outputs.asg_name }} > autoscale-output.txt
+ 
     - name: read autoscale output
       run: cat autoscale-output.txt
 
@@ -66,9 +47,12 @@ jobs:
     - name: check if can be scaled
       id: check
       run: |
+        echo ::set-output name=wanted_capacity::$(expr ${{ steps.autoscale.outputs.desired_capacity }} + 1)
         echo ::set-output name=difference::$(expr ${{ steps.autoscale.outputs.max_size }} - ${{ steps.autoscale.outputs.desired_capacity }})
+
     - name: output difference
       run: echo "The difference between desired and capacity = ${{ steps.check.outputs.difference }}"
+
     - name: scale up if not at max
       id: check_scale
       if: steps.check.outputs.difference > 0 
@@ -85,4 +69,4 @@ jobs:
 
     - name: can't scale
       if: ${{ steps.check_scale.outputs.scale-out != 'true' }}
-      run: echo "sorry, no capacity to scale up"
+      run: echo "Sorry, can't scale out because the new desired capacity of ${{ steps.check.outputs.wanted_capacity }} is greater than the maximum size of ${{ steps.autoscale.outputs.max_size }}"

@@ -12,44 +12,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: output webhook source
-      run: echo "The source of the webhook is = ${{ github.event.client_payload.webhookSource }}"
+    - name: output webhook payload
+      run: echo "The source of the webhook is = ${{ github.event.client_payload }}"
     
-    # - name: install consul client
-    #   run: |
-    #     sh scripts/consul.sh
-    #     /usr/local/bin/consul version
-    
-    # - name: query consul server based on payload data
-    #   id: consul_query
-      # run: /usr/local/bin/consul kv get -http-addr=`cat consul_host.txt` adpm/azure > consul-data.json
-
-    # - name: parse consul data for app scaling
-    #   if: ${{ github.event.client_payload.what_to_scale }} == "app"
-    #   id: consul_data_app
-    #   run: |
-    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq '.apps[] | select(.name=="${{ github.event.client_payload.bigip_app }}") | .asg_name' > asg.json
-    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq -r '.resource_group' > resource_group.json
-    
-    # - name: parse consul data for app scaling
-    #   if: ${{ github.event.client_payload.what_to_scale }} == "bigip"
-    #   id: consul_data_bigip
-    #   run: |
-    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq '.asg_name' > asg.json
-    #     cat consul-data.json | jq '.bigip[] | select(.hostname=="${{ github.event.client_payload.bigip_hostname }}")' | jq -r '.region' > region.json
 
     - name: parse client payload data for scaling
       id: client_payload_data
       run: |
         echo ::set-output name=asg_name::${{ github.event.client_payload.scaleName }}
         echo ::set-output name=resource_group::${{ github.event.client_payload.rgGrpRgn }}
-
-
-    # - name: create output variables
-    #   id: consul_vars
-    #   run: |
-    #     echo ::set-output name=asg_name::$(cat ./asg.json)
-    #     echo ::set-output name=resource_group::$(cat ./resource_group.json)
       
     - uses: azure/login@v1
       with:
@@ -64,6 +35,7 @@ jobs:
         echo ::set-output name=min_size::$(az monitor autoscale show -g ${{ steps.client_payload_data.outputs.resource_group }} -n ${{ steps.client_payload_data.outputs.asg_name }} |  jq '.profiles[] .capacity.minimum')
         echo ::set-output name=max_size::$(az monitor autoscale show -g ${{ steps.client_payload_data.outputs.resource_group }} -n ${{ steps.client_payload_data.outputs.asg_name }} |  jq '.profiles[] .capacity.maximum')
         echo ::set-output name=default_size::$(az monitor autoscale show -g ${{ steps.client_payload_data.outputs.resource_group }} -n ${{ steps.client_payload_data.outputs.asg_name }} |  jq '.profiles[] .capacity.default')
+ 
     - name: read autoscale output
       run: |
         echo "current_size = ${{ steps.scale_params.outputs.current_size }}"
@@ -71,25 +43,21 @@ jobs:
         echo "max_size = ${{ steps.scale_params.outputs.max_size }}"
         echo "default_size = ${{ steps.scale_params.outputs.default_size }}"
 
-    # - name: set autoscale variables
-    #   id: autoscale
-    #   run: |
-    #     echo ::set-output name=max_size::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].MaxSize')
-    #     echo ::set-output name=min_size::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].MinSize')
-    #     echo ::set-output name=desired_capacity::$(cat ./autoscale-output.txt | jq '.AutoScalingGroups[0].DesiredCapacity')
-
     - name: check if can be scaled
       id: check
       run: |
+        echo ::set-output name=wanted_capacity::$(expr ${{ steps.scale_params.outputs.current_size }} - 1 )
         echo ::set-output name=difference::$(expr ${{ steps.scale_params.outputs.current_size }} - ${{ steps.scale_params.outputs.min_size }} - 1 )
+ 
     - name: output difference
-      run: echo "The difference between desired and capacity = ${{ steps.check.outputs.difference }}"
+      run: echo "The difference between desired and current capacity = ${{ steps.check.outputs.difference }}"
+ 
     - name: check if can scale down
       id: check_scale
       if: steps.check.outputs.difference >= 0 
       run: |
        echo "The difference between desired and capacity = ${{ steps.check.outputs.difference }}"
-       echo ::set-output name=new_size::$( expr ${{ steps.scale_params.outputs.current_size }} - 1)
+       echo ::set-output name=new_size::${{ steps.check.outputs.wanted_capacity }}
        echo ::set-output name=can_scale::'true'
 
     - name: scale down
@@ -99,4 +67,4 @@ jobs:
         
     - name: can't scale
       if: ${{ steps.check_scale.outputs.can_scale != 'true' }}
-      run: echo "sorry, no capacity to scale up"
+      run: echo "Sorry, can't scale in because the new desired capacity of ${{ steps.check.outputs.wanted_capacity }} is less than the minimum size of ${{ steps.scale_params.outputs.min_size }}"
