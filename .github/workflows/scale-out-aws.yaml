@@ -14,7 +14,8 @@ jobs:
 
     - name: output webhook source
       run: |
-        echo "The webhook payload contents are ${{ github.event.client_payload }}"
+        echo "The region from the webhook is =  ${{ github.event.client_payload.rgGrpRgn }}"
+        echo "The region from the webhook is =  ${{ github.event.client_payload.scaleName }}"
         echo "The source of the webhook is = ${{ github.event.client_payload.webhookSource }}"
  
     - name: parse client payload data for scaling
