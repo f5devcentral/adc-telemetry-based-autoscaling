@@ -30,7 +30,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ steps.client_payload_data.outputs.region }}
 
-    - name: query aws
+    - name: query aws autoscale information
       run: |
         aws autoscaling describe-auto-scaling-groups --auto-scaling-group-name ${{ steps.client_payload_data.outputs.asg_name }} > autoscale-output.txt
  
