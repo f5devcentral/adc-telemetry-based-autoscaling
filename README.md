@@ -33,5 +33,4 @@ The POC utilizes the following vendor products/services:
   * Route53 – DNS 
   The repository includes Terraform projects to deploy fully functioning application stacks. To deploy the Terraform projects, the following prerequsites and inputs are required:
 
-### Additional Use Cases 
-<img src="images/usecases.png" alt="Italian Trulli">
+
