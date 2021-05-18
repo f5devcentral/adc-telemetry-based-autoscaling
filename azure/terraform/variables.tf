@@ -36,6 +36,13 @@ variable scale_interval {
   type    = number
   default = 300
 }
+
+variable repo_path {
+  type        = string
+  description = "repo path for github actions"
+  default     = "/repos/f5devcentral/adc_performance_monitoring_scaling/dispatches"
+}
+
 variable consul_ip {
   type        = string
   description = "private address assigned to consul server"

@@ -586,6 +586,7 @@ data "template_file" "alertfwd" {
   template          = file("alertfwd.tpl")
   vars = {
     github_token    = var.github_token
+    repo_path       = var.repo_path
   }
 }
 

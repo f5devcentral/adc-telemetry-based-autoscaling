@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const https = require('https')
 const http = require('http');
 const token = "${github_token}" //Required to authenticate with Github action repo
-const repoPath  = '/repos/f5businessdevelopment/adc-performance-monitoring-scaling/dispatches'  //Modify to match designated github action repo
+const repoPath  = '${repo_path}'  //Modify to match designated github action repo
  
  /*  
  Create Listening server - receive alerts from analytics provider
