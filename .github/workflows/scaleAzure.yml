@@ -299,42 +299,42 @@ jobs:
 
       - name: terraform init
         run: |
-          cd ./workflow_state
+          cd ./azure/workflow_state
           terraform init
       
       - name: terraform plan
         run: |
-          cd ./workflow_state
+          cd ./azure/workflow_state
           terraform plan -var 'consul_ip=${{ needs.setup.outputs.consul_server }}' -var 'app_id=${{ needs.setup.outputs.app_id }}' -var 'bigip_count=${{ steps.count.outputs.bigip_count }}' -var 'workload_count=${{ steps.count.outputs.app_count }}'  
        
       - name: terraform apply
         run: |
-          cd ./workflow_state
+          cd ./azure/workflow_state
           terraform apply -var 'consul_ip=${{ needs.setup.outputs.consul_server }}' --auto-approve -var 'app_id=${{ needs.setup.outputs.app_id }}' -var 'bigip_count=${{ steps.count.outputs.bigip_count }}' -var 'workload_count=${{ steps.count.outputs.app_count }}'
     
       - name: terraform output
         run: |
-          cd ./workflow_state
+          cd ./azure/workflow_state
           terraform output
 
       - name: terraform init
         run: |
-          cd ./workflow_terraform
+          cd ./azure/workflow_terraform
           terraform init
       
       - name: terraform plan
         run: |
-          cd ./workflow_terraform
+          cd ./azure/workflow_terraform
           terraform plan -var 'github_token=${{ secrets.GH_TOKEN }}'
        
       - name: terraform apply
         run: |
-          cd ./workflow_terraform
+          cd ./azure/workflow_terraform
           terraform apply --auto-approve -var 'github_token=${{ secrets.GH_TOKEN }}'
     
       - name: terraform output
         run: |
-          cd ./workflow_terraform
+          cd ./azure/workflow_terraform
           terraform output
 
       - name: output context
