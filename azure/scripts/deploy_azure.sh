@@ -6,7 +6,7 @@ do
         t) github_token=${OPTARG};;
     esac
 done
-cd ../terraform/
+cd ../azure/terraform/
 terraform init && terraform plan -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token" && terraform apply --auto-approve -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token"
 sleep 10s
 terraform init -force-copy && terraform plan -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token" && terraform apply --auto-approve -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token"
