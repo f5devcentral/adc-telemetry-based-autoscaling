@@ -1,0 +1,381 @@
+name: scale-azure
+on:
+  repository_dispatch:
+    types:
+      - scale-azure
+jobs:
+  setup:
+    name: setup
+    runs-on: ubuntu-latest
+    env:
+     ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+    outputs:
+      can_scale: ${{ steps.test.outputs.can_scale }}
+      new_count: ${{ steps.test.outputs.new_count }}
+      app_id: ${{ steps.client_payload_data.outputs.app_id }}
+      scaling_direction: ${{ github.event.client_payload.scaling_direction }}
+      consul_server: ${{ steps.consul_params.outputs.consul_server }}
+      we_set_running: ${{ steps.check_running.outputs.we_set_running }}
+      bigip_current_count: ${{ steps.current.outputs.bigip_current_count }}
+      app_current_count: ${{ steps.current.outputs.app_current_count }}
+    steps:
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CONTEXT"      
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "$JOB_CONTEXT"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJSON(steps) }}
+        run: echo "$STEPS_CONTEXT"
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJSON(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJSON(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJSON(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
+      - name: output context
+        id: json
+        run: echo ::set-output name=gh_context::$( "${{ toJSON(github) }}" )
+
+      - name: output run id
+        run: echo "THIS IS THE CONTEXT ${{ steps.json.outputs.gh_context }}"
+
+      - name: output workflow run number
+        run: echo "This is the workflow run number $GITHUB_RUN_NUMBER"
+
+      - name: grab current time
+        id: current_time_seconds
+        run: echo ::set-output name=current_time_seconds::$(date +%s)
+      
+      - name: show current time
+        run: |
+          echo "The current time in seconds is = ${{ steps.current_time_seconds.outputs.current_time_seconds }}"
+          echo "The current time in date format is = `date --date="@${{ steps.current_time_seconds.outputs.current_time_seconds }}"`"
+            
+      - name: Checkout
+        uses: actions/checkout@v2
+  
+      - name: output webhook payload
+        run: |
+          echo "The source of the webhook is = ${{ github.event.client_payload.webhook_source }}"
+          echo "The application id from the webhook is = ${{ github.event.client_payload.app_id}}"
+          echo "The scaling direction from webhook is = ${{ github.event.client_payload.scaling_direction }}"
+          echo "The scaling type from webhook is = ${{ github.event.client_payload.scaling_type }}"
+          echo "The app name from the webhook is = ${{ github.event.client_payload.app_name }}"
+
+      - name: parse client payload data for scaling
+        id: client_payload_data
+        run: |
+          echo ::set-output name=app_id::${{ github.event.client_payload.app_id }}
+          echo ::set-output name=app_name::${{ github.event.client_payload.app_name }}
+          echo ::set-output name=scaling_type::${{ github.event.client_payload.scaling_type }}
+          echo ::set-output name=scaling_direction::${{ github.event.client_payload.scaling_direction }}
+
+      - name: install consul client
+        run: sudo sh scripts/consul.sh 
+
+      - name: get consul server parameters
+        id: consul_params
+        run: |
+          echo ::set-output name=consul_server::$(cat configs/consul_server.cfg)
+      
+      - name: check if another running already
+        id: get_is_running
+        run: echo ::set-output name=is_running::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id }}/scaling/is_running)
+
+      - name: do we run?
+        id: check_running
+        run: |
+          if [[ "${{ steps.get_is_running.outputs.is_running }}" == "true" ]]; then
+            echo "WE ARE ABORTING BECAUSE ANOTHER RUNNING"
+            exit 1
+          else
+            consul kv put -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ github.event.client_payload.app_id }}/scaling/is_running true
+            echo ::set-output name=we_set_running::'true' 
+          fi
+      
+      - name: get current
+        id: current
+        run: |
+          echo ::set-output name=bigip_last_modified_time::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id }}/scaling/bigip/last_modified_timestamp)
+
+          echo ::set-output name=app_last_modified_time::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id }}/scaling/workload/last_modified_timestamp)
+
+          echo ::set-output name=app_current_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/scaling/workload/current_count)
+
+          echo ::set-output name=bigip_current_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/scaling/bigip/current_count)
+
+      - name: output last modified times
+        id: seconds
+        run: |
+          echo "BIGIP last modified time = ${{ steps.current.outputs.bigip_last_modified_time }}"
+          echo "Workload last modified time = ${{ steps.current.outputs.app_last_modified_time }}"
+          echo ::set-output name=bigip_modified_seconds::$(date --date="${{ steps.current.outputs.bigip_last_modified_time }}" +%s)
+          echo ::set-output name=app_modified_seconds::$(date --date="${{ steps.current.outputs.app_last_modified_time }}" +%s)
+
+          echo "Workload current count is ${{ steps.current.outputs.app_current_count }}"
+          echo "BIGIP current count is ${{ steps.current.outputs.bigip_current_count }}"
+
+      - name: set values
+        id: values
+        run: |
+          if [[ "${{ github.event.client_payload.scaling_type }}" == "app" ]]; then
+            echo ::set-output name=last_modified_time::${{ steps.current.outputs.app_last_modified_time}}
+
+            echo ::set-output name=scaling_time_delta::$(expr ${{ steps.current_time_seconds.outputs.current_time_seconds }} - ${{ steps.seconds.outputs.app_modified_seconds }})
+
+            echo ::set-output name=min_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/common/scaling/workload/min)
+
+            echo ::set-output name=max_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/common/scaling/workload/max)
+
+            echo ::set-output name=current_count::${{ steps.current.outputs.app_current_count }}
+
+            echo ::set-output name=min_scaling_interval::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/common/scaling/min_scaling_interval_seconds)
+          elif [[ "${{ github.event.client_payload.scaling_type }}" == "bigip" ]]; then
+            echo ::set-output name=last_modified_time::${{ steps.current.outputs.app_last_modified_time}}
+
+            echo ::set-output name=scaling_time_delta::$(expr ${{ steps.current_time_seconds.outputs.current_time_seconds }} - ${{ steps.seconds.outputs.bigip_modified_seconds }})
+
+            echo ::set-output name=min_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/common/scaling/bigip/min)
+
+            echo ::set-output name=max_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/common/scaling/bigip/max)
+
+            echo ::set-output name=current_count::${{ steps.current.outputs.bigip_current_count }}
+
+            echo ::set-output name=min_scaling_interval::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/common/scaling/min_scaling_interval_seconds)
+          else
+            echo "SCALING TYPE NOT SET CORRECTLY"
+          fi
+
+      - name: output time seconds
+        run: |
+          echo "This is the BIGIP modified time in seconds = ${{ steps.seconds.outputs.bigip_modified_seconds }}"
+          echo "This is the App modified time in seconds = ${{ steps.seconds.outputs.app_modified_seconds }}"
+
+      - name: show scaling deltas
+        run: echo "scaling delta in seconds is = ${{ steps.values.outputs.scaling_time_delta }}"
+
+      - name: check time
+        run: |
+          if [[ ${{ steps.values.outputs.min_scaling_interval }} -gt ${{ steps.values.outputs.scaling_time_delta }} ]]; then
+            echo "TIME TOO SHORT! It has been ${{ steps.values.outputs.scaling_time_delta }} seconds since last scaling event which is less than the minimum interval of ${{ steps.values.outputs.min_scaling_interval }} seconds"
+            exit 1
+          fi
+
+      - name: calculate difference
+        id: delta
+        run: |
+          echo "This is the current count ${{ steps.values.outputs.current_count }}"
+          echo "This is the max count ${{ steps.values.outputs.max_count }}"
+          echo "This is the max count ${{ steps.values.outputs.min_count }}"
+          echo ::set-output name=wanted_scale_down_count::$(expr ${{ steps.values.outputs.current_count }} - 1 )
+          echo ::set-output name=wanted_scale_up_count::$(expr ${{ steps.values.outputs.current_count }} + 1 )
+
+      - name: output deltas
+        run: |
+            echo "this is the scale down value count = ${{ steps.delta.outputs.wanted_scale_down_count }}"
+            echo "this is the scale up value count = ${{ steps.delta.outputs.wanted_scale_up_count }}"
+
+      - name: test limits
+        id: test
+        env: 
+          DIRECTION: "${{ github.event.client_payload.scaling_direction }}"
+        run: |
+          echo $DIRECTION
+          echo ::set-output name=can_scale::'false'
+            if [[ "$DIRECTION" == 'down' ]]  && [[ ${{ steps.delta.outputs.wanted_scale_down_count }} -ge ${{ steps.values.outputs.min_count }} ]]; then
+              echo "::set-env name=direction::down"
+              echo "DIRECTION IS DOWN"
+              echo "::set-output name=new_count::${{ steps.delta.outputs.wanted_scale_down_count }}"
+              echo ::set-output name=can_scale::'true'
+            elif [[ "$DIRECTION" == 'up' ]]  && [[ ${{ steps.delta.outputs.wanted_scale_up_count }} -le ${{ steps.values.outputs.max_count }} ]]; then
+               echo "::set-env name=direction::up"
+               echo "::set-output name=direction::up"
+               echo "DIRECTION IS UP"
+               echo "::set-output name=new_count::${{ steps.delta.outputs.wanted_scale_up_count }}"
+               echo ::set-output name=can_scale::'true'
+            fi
+
+      - name: output direction environment variable
+        id: environment
+        run: |
+          echo "this is the direction env value ${{ env.direction }}"
+          echo "this is the direction output value ${{ steps.test.outputs.direction }}"
+          echo "this is the new instance count = ${{ steps.test.outputs.new_count }}"
+  
+      - name: can't scale
+        id: cant_scale
+        if: steps.test.outputs.can_scale != 'true'
+        env: 
+          UP_MESSAGE: "Can't scale up to the desired capacity of ${{ steps.delta.outputs.wanted_scale_up_count }} because it is greater than the maximum number of instances of ${{ steps.values.outputs.max_count }}"
+          DOWN_MESSAGE: "Can't scale down to the desired capacity of ${{ steps.delta.outputs.wanted_scale_down_count }} because it is lower than the minimum number of instances of ${{ steps.values.outputs.min_count }}"
+        run: |
+          if [[ "${{ github.event.client_payload.scaling_direction }}" == "up" ]]; then
+            echo ::set-output name=message::"$UP_MESSAGE"
+            echo "$UP_MESSAGE"
+          else
+            echo ::set-output name=message::"$DOWN_MESSAGE"
+            echo "$DOWN_MESSAGE"
+          fi 
+  scale:
+    if: needs.setup.outputs.can_scale == 'true'
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    needs: setup
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: output environment variable
+        run: |
+          echo "This is the can_scale variable from build step = ${{ needs.setup.outputs.can_scale }}"
+          echo "This is the workload_count variable from build step = ${{ needs.setup.outputs.app_current_count }}"
+          echo "This is the bigip_count variable from build step = ${{ needs.setup.outputs.bigip_current_count }}"
+          echo "this is the application ID = ${{ needs.setup.outputs.app_id }}"
+          echo "this is the scaling_type = ${{ github.event.client_payload.scaling_type }}"
+          echo "this is the new count = ${{ needs.setup.outputs.new_count }}"
+      
+      - name: scaling down 
+        if: needs.setup.outputs.scaling_direction == 'down'
+        run: echo "SCALING DOWN" 
+
+      - name: scaling up
+        if: needs.setup.outputs.scaling_direction == 'up' 
+        run: echo "SCALING UP"
+      
+      - name: assign new count
+        id: count
+        run: |
+          echo "HOWDY DOODY"
+          if [[ "${{ github.event.client_payload.scaling_type }}" == "app" ]]; then
+            echo ::set-output name=app_count::${{ needs.setup.outputs.new_count }}
+            echo ::set-output name=bigip_count::${{ needs.setup.outputs.bigip_current_count }}
+          else 
+            echo ::set-output name=bigip_count::${{ needs.setup.outputs.new_count }}
+            echo ::set-output name=app_count::${{ needs.setup.outputs.app_current_count }}
+          fi
+      
+      - name: output counts 
+        run: |
+          echo "THIS IS THE APP COUNT ${{ steps.count.outputs.app_count }}"
+          echo "THIS IS THE BIGIP COUNT ${{ steps.count.outputs.bigip_count }}"
+
+      - name: login to azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDS }}
+
+      - name: run azure command
+        run: az account list
+
+      - name: initialize terraform environment
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ~0.14.3
+
+      - name: output terraform version
+        run: terraform version
+    
+      
+      - name: set azure creds environment variables
+        run: |
+          echo ::set-env name=ARM_CLIENT_ID::${{ secrets.AZURE_CLIENT_ID }}
+          echo ::set-env name=ARM_CLIENT_SECRET::${{ secrets.AZURE_CLIENT_SECRET }}
+          echo ::set-env name=ARM_SUBSCRIPTION_ID::${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          echo ::set-env name=ARM_TENANT_ID::${{ secrets.AZURE_TENANT_ID }}
+
+      - name: terraform init
+        run: |
+          cd ./workflow_state
+          terraform init
+      
+      - name: terraform plan
+        run: |
+          cd ./workflow_state
+          terraform plan -var 'consul_ip=${{ needs.setup.outputs.consul_server }}' -var 'app_id=${{ needs.setup.outputs.app_id }}' -var 'bigip_count=${{ steps.count.outputs.bigip_count }}' -var 'workload_count=${{ steps.count.outputs.app_count }}'  
+       
+      - name: terraform apply
+        run: |
+          cd ./workflow_state
+          terraform apply -var 'consul_ip=${{ needs.setup.outputs.consul_server }}' --auto-approve -var 'app_id=${{ needs.setup.outputs.app_id }}' -var 'bigip_count=${{ steps.count.outputs.bigip_count }}' -var 'workload_count=${{ steps.count.outputs.app_count }}'
+    
+      - name: terraform output
+        run: |
+          cd ./workflow_state
+          terraform output
+
+      - name: terraform init
+        run: |
+          cd ./workflow_terraform
+          terraform init
+      
+      - name: terraform plan
+        run: |
+          cd ./workflow_terraform
+          terraform plan -var 'github_token=${{ secrets.GH_TOKEN }}'
+       
+      - name: terraform apply
+        run: |
+          cd ./workflow_terraform
+          terraform apply --auto-approve -var 'github_token=${{ secrets.GH_TOKEN }}'
+    
+      - name: terraform output
+        run: |
+          cd ./workflow_terraform
+          terraform output
+
+      - name: output context
+        id: json
+        run: echo ::set-output name=gh_context::$(echo "${{env.GITHUB_CONTEXT}}" )
+      
+      - name: install consul client
+        run: sudo sh scripts/consul.sh
+
+      - name: update time & count on k/v store
+        run: |
+          if [[ "${{ github.event.client_payload.scaling_type }}" == "bigip" ]]; then
+            echo `date '+%Y-%m-%d %H:%M:%S'` | consul kv put -http-addr=${{ needs.setup.outputs.consul_server }} adpm/applications/${{ needs.setup.outputs.app_id }}/scaling/bigip/last_modified_timestamp -
+            consul kv put -http-addr=${{ needs.setup.outputs.consul_server }} adpm/applications/${{ needs.setup.outputs.app_id }}/scaling/bigip/current_count ${{ steps.count.outputs.bigip_count }}
+          else
+            echo `date '+%Y-%m-%d %H:%M:%S'` | consul kv put -http-addr=${{ needs.setup.outputs.consul_server }} adpm/applications/${{ github.event.client_payload.app_id }}/scaling/workload/last_modified_timestamp -
+            consul kv put -http-addr=${{ needs.setup.outputs.consul_server }} adpm/applications/${{ github.event.client_payload.app_id }}/scaling/workload/current_count ${{ steps.count.outputs.app_count }}
+          fi 
+  reset_run_flag:
+    if: always()
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+    needs: [setup, scale]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: install consul client
+        run: |
+          sudo sh scripts/consul.sh
+
+      - name: reset run flag
+        run: |
+          if [[ ${{ needs.setup.outputs.we_set_running == 'true' }} ]]; then
+            consul kv put -http-addr=${{ needs.setup.outputs.consul_server }} adpm/applications/${{ github.event.client_payload.app_id }}/scaling/is_running false
+            echo ::set-output name=message::"The application 'is_running' flag has been reset to false"
+          fi
+      
+      - name: Dump job context
+        id: context
+        env:
+          JOB_CONTEXT: ${{ toJSON(job) }}
+        run: echo "This is the job context $JOB_CONTEXT"           
