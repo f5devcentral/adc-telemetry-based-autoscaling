@@ -3,7 +3,7 @@ ADC Telemetry-based Autoscaling
 
 This solution, (see below) illustrates how F5's Automation Toolchain can integrate with third party analytics provider(s) to provide cloud-agnostic centralized application delivery monitoring and autoscaling. 
  
-   .. image:: ./images/arch.png
+   .. image:: images/arch.png
 
 The solution utilizes various third-party technologies/services along with F5’s automation toolchain including:
    
