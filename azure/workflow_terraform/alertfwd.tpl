@@ -41,16 +41,20 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
       var hostIndex = vals.search("bigip.azure")
       hostName = vals.substring(hostIndex, hostIndex + 20)
 
-
     } else if (source == 'elk') {
       analytic = "elk"
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
       hostName = message.substring(hostIndex, hostIndex + 20)
-      poolName = ""
-    }
     
-     //Convert hostName and poolName to arrays and derive identifiers
+    } else if (source == 'splunk') {
+      analytic = "splunk"
+      message = bodyJson.message
+      var hostIndex = message.search("bigip.azure")
+      hostName = message.substring(hostIndex, hostIndex + 20)
+    } 
+    
+     //Convert hostName to arrays and derive identifiers
      var n = hostName.split(".");
      app_id = n[2];
 
@@ -166,6 +170,3 @@ WantedBy=multi-user.target
 EOF
 
 sudo systemctl start alertforwarder.service && sudo systemctl stop alertforwarder.service && sudo systemctl restart alertforwarder.service
-
-
-
