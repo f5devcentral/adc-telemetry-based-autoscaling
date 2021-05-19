@@ -84,12 +84,12 @@ jobs:
           echo ::set-output name=scaling_direction::${{ github.event.client_payload.scaling_direction }}
 
       - name: install consul client
-        run: sudo sh scripts/consul.sh 
+        run: sudo sh azure/scripts/consul.sh 
 
       - name: get consul server parameters
         id: consul_params
         run: |
-          echo ::set-output name=consul_server::$(cat configs/consul_server.cfg)
+          echo ::set-output name=consul_server::$(cat azure/configs/consul_server.cfg)
       
       - name: check if another running already
         id: get_is_running
@@ -342,7 +342,7 @@ jobs:
         run: echo ::set-output name=gh_context::$(echo "${{env.GITHUB_CONTEXT}}" )
       
       - name: install consul client
-        run: sudo sh scripts/consul.sh
+        run: sudo sh azure/scripts/consul.sh
 
       - name: update time & count on k/v store
         run: |
@@ -365,7 +365,7 @@ jobs:
 
       - name: install consul client
         run: |
-          sudo sh scripts/consul.sh
+          sudo sh azure/scripts/consul.sh
 
       - name: reset run flag
         run: |
