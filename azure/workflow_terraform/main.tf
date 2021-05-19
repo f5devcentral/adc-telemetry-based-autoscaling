@@ -16,7 +16,7 @@ provider "github" {
 resource "github_repository_file" "adpm" {
   repository          = "adc-performance-monitoring-scaling"
   branch              = "main"
-  file                = "configs/consul_server.cfg"
+  file                = "azure/configs/consul_server.cfg"
   content             = format("http://%s:8500", azurerm_public_ip.consul_public_ip.ip_address)
   commit_message      = format("file contents update by application ID: %s", local.app_id)
   overwrite_on_create = true
