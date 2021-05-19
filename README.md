@@ -13,4 +13,4 @@ The solution utilizes various third-party technologies/services along with F5’
    - **GitHub Actions** for workflow automation 
    - **Azure** public cloud for application hosting
    - **Hashicorp Terraform** and **Consul** for infrastructure provisioning, service discovery and event logging
-   - **Third-party Analytics Provider **, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
+   - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
