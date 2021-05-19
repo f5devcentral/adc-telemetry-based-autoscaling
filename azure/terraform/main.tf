@@ -14,7 +14,7 @@ provider "github" {
 }
 
 resource "github_repository_file" "adpm" {
-  repository          = "adc-performance-monitoring-scaling"
+  repository          = "adc-telemetry-based-scaling"
   branch              = "main"
   file                = "azure/configs/consul_server.cfg"
   content             = format("http://%s:8500", azurerm_public_ip.consul_public_ip.ip_address)
