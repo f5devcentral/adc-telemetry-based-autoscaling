@@ -14,14 +14,15 @@ The solution utilizes various third-party technologies/services along with F5’
    - **Hashicorp Terraform** and **Consul** for infrastructure provisioning, service discovery and event logging
    - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
 
-Prerequisites
+Deployment Steps
 -------------
 
-**Github Secrets** 
+**Github Secrets** \
+
 
 - AZURE_CLIENT_ID
 - AZURE_CLIENT_SECRET
-- AZURE_CREDS
 - AZURE_SUBSCRIPTION_ID
 - AZURE_TENANT_ID
+- AZURE_CREDS
 - GH_TOKEN
