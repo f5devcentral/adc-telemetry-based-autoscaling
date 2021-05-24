@@ -18,3 +18,10 @@ Prerequisites
 -------------
 
 **Github Secrets** 
+
+- AZURE_CLIENT_ID
+- AZURE_CLIENT_SECRET
+- AZURE_CREDS
+- AZURE_SUBSCRIPTION_ID
+- AZURE_TENANT_ID
+- GH_TOKEN
