@@ -26,5 +26,16 @@
            "value": "application/json"
          }
      ]
+  },
+  "My_Consumer": {
+    "class": "Telemetry_Consumer",
+    "type": "Splunk",
+    "host": "206.124.129.187",
+    "protocol": "https",
+    "port": 8088,
+    "allowSelfSignedCert": true,
+    "passphrase": {
+        "cipherText": "f02428fa-bc2e-42de-8368-ee25fe35ef5d"
+    }
   }
 }

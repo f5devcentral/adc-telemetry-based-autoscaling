@@ -7,6 +7,6 @@ do
     esac
 done
 cd ../terraform/
-terraform init && terraform plan -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token" && terraform apply --auto-approve -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token"
+terraform init && terraform plan && terraform apply --auto-approve 
 sleep 10s
-terraform init -force-copy && terraform plan -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token" && terraform apply --auto-approve -var="bigip_count=$bigip_count" -var="workload_count=$workload_count" -var="github_token=$github_token"
+terraform init -force-copy && terraform plan && terraform apply --auto-approve

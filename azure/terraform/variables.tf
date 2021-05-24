@@ -8,11 +8,6 @@ variable workload_count {
   type        = number
 }
 
-variable app_name {
-  type    = string
-  default = "sample_app"
-}
-
 variable bigip_min {
   type    = number
   default = 1
@@ -41,6 +36,11 @@ variable repo_path {
   type        = string
   description = "repo path for github actions"
   default     = "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"
+}
+
+variable app_name {
+  type    = string
+  default = "sample_app"
 }
 
 variable consul_ip {
