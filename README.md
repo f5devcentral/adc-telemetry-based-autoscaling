@@ -17,4 +17,4 @@ The solution utilizes various third-party technologies/services along with F5’
 Prerequisites
 -------------
 
-- **Github Secrets** 
+**Github Secrets** 
