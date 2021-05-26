@@ -10,6 +10,7 @@ docs/_static/apidocs.html
 node_modules
 rpmbuild
 test-output.txt
+terraform.tfvars
 iappslx/presentation/openapi.json
 venv/
 docs/userguide/proposed-doc-rev.rst
