@@ -2,7 +2,7 @@
 location = "eastus"
 AllowedIPs = ["0.0.0.0/0"]
 github_owner = "f5devcentral"
-github_token = ""
+github_token = "3"
 bigip_count = 1
 workload_count = 2
 bigip_min = 1
