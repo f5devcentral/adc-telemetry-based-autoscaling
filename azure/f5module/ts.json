@@ -27,17 +27,6 @@
          }
      ]
   },
-  "My_Splunk_Consumer": {
-    "class": "Telemetry_Consumer",
-    "type": "Splunk",
-    "host": "${splunkIP}",
-    "protocol": "https",
-    "port": 8088,
-    "allowSelfSignedCert": true,
-    "passphrase": {
-        "cipherText": ""
-    }
-  },
   "My_LAW_Consumer": {
     "class": "Telemetry_Consumer",
     "type": "Azure_Log_Analytics",
