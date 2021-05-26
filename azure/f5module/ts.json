@@ -43,7 +43,7 @@
     "type": "Azure_Log_Analytics",
     "workspaceId": "${law_id}",
     "passphrase": {
-        "cipherText": "${law_primkey}"
+        "cipherText": "${law_primarykey}"
     },
     "useManagedIdentity": false,
     "region": "${region}"
