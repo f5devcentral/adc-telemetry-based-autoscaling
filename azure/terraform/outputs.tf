@@ -11,12 +11,16 @@ output "e_consul_public_address" {
    value = "http://${azurerm_public_ip.consul_public_ip.ip_address}:8500"
  }
 
-output "f_elk_public_address" {
+output "f_AlertForwarder_public_address" {
+   value = "http://${azurerm_public_ip.af_public_ip.ip_address}:8000"
+}
+
+output "g_elk_public_address" {
    value = "http://${azurerm_public_ip.elk_public_ip.ip_address}"
 }
 
-output "g_AlertForwarder_public_address" {
-   value = "http://${azurerm_public_ip.af_public_ip.ip_address}:8000"
+output "h_splunk_public_address" {
+   value = "http://${azurerm_public_ip.splunk_public_ip.ip_address}:8000"
 }
 
 output app_id {

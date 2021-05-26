@@ -27,15 +27,25 @@
          }
      ]
   },
-  "My_Consumer": {
+  "My_Splunk_Consumer": {
     "class": "Telemetry_Consumer",
     "type": "Splunk",
-    "host": "206.124.129.187",
+    "host": "${splunkIP}",
     "protocol": "https",
     "port": 8088,
     "allowSelfSignedCert": true,
     "passphrase": {
-        "cipherText": "f02428fa-bc2e-42de-8368-ee25fe35ef5d"
+        "cipherText": ""
     }
+  },
+  "My_LAW_Consumer": {
+    "class": "Telemetry_Consumer",
+    "type": "Azure_Log_Analytics",
+    "workspaceId": "${law_id}",
+    "passphrase": {
+        "cipherText": "${law_primkey}"
+    },
+    "useManagedIdentity": false,
+    "region": "${region}"
   }
 }

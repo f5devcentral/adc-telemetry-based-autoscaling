@@ -44,6 +44,10 @@ data "template_file" "ts_json" {
   template   = file("${path.module}/ts.json")
 
   vars = {
-    logStashIP       = "10.254.1.125"
+    logStashIP      = "10.2.1.125"
+    splunkIP        = "10.2.1.135"
+    law_id          = var.law_id
+    law_primarykey  = var.law_primarykey 
+    region          = data.azurerm_resource_group.bigiprg.location
   }
 }

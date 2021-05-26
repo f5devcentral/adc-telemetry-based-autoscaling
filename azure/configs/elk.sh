@@ -165,7 +165,9 @@ expect eof
 EOF
 sudo chmod +x ./pass
 sudo ./pass 
+}
 
+setup_ca() {
 sudo cat << EOF > CA
 #!/usr/bin/expect -f
 
@@ -208,7 +210,9 @@ expect eof
 EOF
 sudo chmod +x ./CA
 sudo ./CA
+}
 
+setup_cert() {
 sudo cat << EOF > cert
 #!/usr/bin/expect -f
 
@@ -280,7 +284,9 @@ expect eof
 EOF
 sudo chmod +x ./cert
 sudo ./cert
+}
 
+setup_http() {
 sudo cat << EOF > http
 #!/usr/bin/expect -f
 
@@ -535,3 +541,6 @@ install_kibana
 install_logstash
 install_security
 setup_passwords
+setup_ca
+setup_cert
+setup_http
