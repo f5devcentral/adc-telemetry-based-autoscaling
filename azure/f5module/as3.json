@@ -34,6 +34,17 @@
 					},
 					"profileAnalyticsTcp": {
 						"use": "telemetry_tcp_analytics_profile"
+					},
+					"securityLogProfiles": [
+						{
+							"use": "telemetry_asm_security_log_profile"
+						}						
+					],
+					"profileBotDefense": {
+						"bigip": "/Common/bot-defense"
+					},
+					"profileDOS": {
+						"bigip": "/Common/dos"
 					}
 				},
 				"${web_pool}": {
@@ -47,6 +58,11 @@
 						"updateInterval": 10,
 						"uri": "http://${consul_ip}:8500/v1/catalog/service/nginx"
 					}]
+				},
+				"My_ASM_Policy": {
+					"class": "WAF_Policy",
+					"url": "https://raw.githubusercontent.com/f5devcentral/adc-telemetry-based-autoscaling/main/configs/myapp_sec_policy.xml",
+					"ignoreChanges": true
 				},
 				"telemetry_local_rule": {
 					"remark": "Only required when TS is a local listener",
@@ -135,6 +151,22 @@
 					"collectRemoteHostIp": true,
 					"collectRemoteHostSubnet" : true,
 					"collectedByServerSide": true
+				},
+				"telemetry_asm_security_log_profile": {
+					"class": "Security_Log_Profile",
+					"application": {
+						"localStorage": false,
+						"remoteStorage": "splunk",
+						"servers": [
+							{
+								"address": "255.255.255.254",
+								"port": "6514"
+							}
+						],
+						"storageFilter": {
+							"requestType": "all"
+						}
+					}
 				},
 				"webtls": {
 					"class": "TLS_Server",
