@@ -12,21 +12,6 @@
     "class": "Telemetry_Listener",
     "port": 6514
   },
-  "My_ELK_Consumer": {
-    "class": "Telemetry_Consumer",
-    "type": "Generic_HTTP",
-    "host": "${logStashIP}",
-    "protocol": "http",
-    "port": 8080,
-    "path": "/",
-    "method": "POST",
-    "headers": [
-         {
-           "name": "content-type",
-           "value": "application/json"
-         }
-     ]
-  },
   "My_LAW_Consumer": {
     "class": "Telemetry_Consumer",
     "type": "Azure_Log_Analytics",
@@ -35,19 +20,6 @@
         "cipherText": "${law_primarykey}"
     },
     "useManagedIdentity": false,
-    "region": "${region}"
-  },
-  "My_Splunk_Consumer": {
-    "class": "Telemetry_Consumer",
-    "type": "Splunk",
-    "host": "${splunkIP}",
-    "protocol": "https",
-    "port": 8088,
-    "allowSelfSignedCert": true,
-    "passphrase": {
-        "cipherText": "xxxxxxxxx-xxxxx-xxxx-xxxx-xxxxxxxxxxxxx"
-    }
-}
-}
-
+    "region": "${region}"   
+  }
 }

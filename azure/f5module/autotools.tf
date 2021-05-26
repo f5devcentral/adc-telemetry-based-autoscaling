@@ -12,7 +12,7 @@ data "template_file" "init_file" {
     onboard_log    = var.onboard_log
     DO_Document    = data.template_file.vm01_do_json.rendered
     AS3_Document   = data.template_file.as3_json.rendered
-    //TS_Document    = data.template_file.ts_json.rendered
+    TS_Document    = data.template_file.ts_json.rendered
     app_name        = var.app_name
   }
 }
@@ -40,13 +40,13 @@ data "template_file" "as3_json" {
   }
 }
 
-//data "template_file" "ts_json" {
-//  template   = file("${path.module}/ts.json")
-//  vars = {
+data "template_file" "ts_json" {
+  template   = file("${path.module}/ts.json")
+  vars = {
 //    logStashIP      = "10.2.1.125"
 //    splunkIP        = "10.2.1.135"
-//    law_id          = var.law_id
-//    law_primarykey  = var.law_primarykey 
-//    region          = data.azurerm_resource_group.bigiprg.location
-//  }
-//}
+    law_id          = var.law_id
+    law_primarykey  = var.law_primarykey 
+    region          = data.azurerm_resource_group.bigiprg.location
+  }
+}
