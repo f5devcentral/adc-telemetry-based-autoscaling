@@ -35,7 +35,8 @@
         "myProvisioning": {
             "class": "Provision",
             "ltm": "nominal",
-            "avr": "nominal"
+            "avr": "nominal",
+            "asm": "nominal"
         }
     }
 }
