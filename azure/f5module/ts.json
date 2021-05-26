@@ -36,5 +36,18 @@
     },
     "useManagedIdentity": false,
     "region": "${region}"
-  }
+  },
+  "My_Splunk_Consumer": {
+    "class": "Telemetry_Consumer",
+    "type": "Splunk",
+    "host": "${splunkIP}",
+    "protocol": "https",
+    "port": 8088,
+    "allowSelfSignedCert": true,
+    "passphrase": {
+        "cipherText": "xxxxxxxxx-xxxxx-xxxx-xxxx-xxxxxxxxxxxxx"
+    }
+}
+}
+
 }
