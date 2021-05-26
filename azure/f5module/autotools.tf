@@ -12,7 +12,7 @@ data "template_file" "init_file" {
     onboard_log    = var.onboard_log
     DO_Document    = data.template_file.vm01_do_json.rendered
     AS3_Document   = data.template_file.as3_json.rendered
-    TS_Document    = data.template_file.ts_json.rendered
+    //TS_Document    = data.template_file.ts_json.rendered
     app_name        = var.app_name
   }
 }

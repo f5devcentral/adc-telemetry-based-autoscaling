@@ -98,8 +98,8 @@ module bigip {
   app_name                   = var.app_name
   consul_ip                  = var.consul_ip
   app_id                     = local.app_id
-  law_id                     = azurerm_log_analytics_workspace.law.workspace_id
-  law_primarykey                = azurerm_log_analytics_workspace.law.primary_shared_key
+  //law_id                     = azurerm_log_analytics_workspace.law.workspace_id
+  //law_primarykey                = azurerm_log_analytics_workspace.law.primary_shared_key
  
 
   providers = {
