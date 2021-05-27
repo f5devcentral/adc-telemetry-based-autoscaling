@@ -40,13 +40,35 @@ data "template_file" "as3_json" {
   }
 }
 
+# Create Log Analytic Workspace
+
+resource "azurerm_log_analytics_workspace" "law" {
+  name                = "log-analytics-workspace"
+  sku                 = "PerNode"
+  retention_in_days   = 300
+  resource_group_name = data.azurerm_resource_group.bigiprg.name
+  location            = data.azurerm_resource_group.bigiprg.location
+}
+
+resource "azurerm_log_analytics_solution" "sentinel" {
+  solution_name         = "SecurityInsights"
+  location            = data.azurerm_resource_group.bigiprg.location
+  resource_group_name = data.azurerm_resource_group.bigiprg.name
+  workspace_resource_id = azurerm_log_analytics_workspace.law.id
+  workspace_name        = azurerm_log_analytics_workspace.law.name
+  plan {
+    publisher = "Microsoft"
+    product   = "OMSGallery/SecurityInsights"
+  }
+}
+
 data "template_file" "ts_json" {
   template   = file("${path.module}/ts.json")
   vars = {
 //    logStashIP      = "10.2.1.125"
 //    splunkIP        = "10.2.1.135"
-    law_id          = var.law_id
-    law_primarykey  = var.law_primarykey 
-    region          = data.azurerm_resource_group.bigiprg.location
+    law_id            = azurerm_log_analytics_workspace.law.workspace_id
+    law_primkey       = azurerm_log_analytics_workspace.law.primary_shared_key
+    region            = data.azurerm_resource_group.bigiprg.location
   }
 }
