@@ -8,16 +8,6 @@ variable consul_ip {
   type        = string
 }
 
-variable law_id {
-  description = "Azure log analytics workspace ID"
-  type        = string
-}
-
-variable law_primarykey {
-  description = "Azure log analytics workspace primary key"
-  type        = string
-}
-
 variable f5_username {
   description = "The admin username of the F5 Bigip that will be deployed"
   default     = "bigipuser"
