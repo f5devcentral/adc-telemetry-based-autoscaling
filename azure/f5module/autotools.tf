@@ -68,7 +68,7 @@ data "template_file" "ts_json" {
 //    logStashIP      = "10.2.1.125"
 //    splunkIP        = "10.2.1.135"
     law_id            = azurerm_log_analytics_workspace.law.workspace_id
-    law_primkey       = azurerm_log_analytics_workspace.law.primary_shared_key
+    law_primarykey     = azurerm_log_analytics_workspace.law.primary_shared_key
     region            = data.azurerm_resource_group.bigiprg.location
   }
 }
