@@ -14,36 +14,35 @@ The solution utilizes various third-party technologies/services along with F5’
    - **Hashicorp Terraform** and **Consul** for infrastructure provisioning, service discovery and event logging
    - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
 
-## Deployment
 
+## Deploying the Solution
 Since the solution utilies Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  After which you can clone the newly created repo locally to perform the initial application infrastructure deployment.
 
-### GitHub Secret
+
+### GitHub Secrets
 Create the following [GitHub secrets](https://docs.github.com/en/actions/reference/encrypted-secrets).  The secrets will be utilized by the actions workflow to securely update the Azure deployment. You will need to provide [Azure service prinicipal credentials](https://github.com/marketplace/actions/azure-login) as well as a [GitHub acces token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your repository.
 
-- GH_TOKEN  *ex: "ghp_mkqCzxBci0Sl3.......rY"
-- AZURE_CLIENT_ID
-- AZURE_CLIENT_SECRET
-- AZURE_SUBSCRIPTION_ID
-- AZURE_TENANT_ID
-- AZURE_CREDS
-
+- GH_TOKEN   - *ex: ghp_mkqCzxBci0Sl3.......rY
+- AZURE_CLIENT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+- AZURE_CLIENT_SECRET   - *ex: XXXXXXXXXXXXXXXXXXXXXXXXXXX
+- AZURE_SUBSCRIPTION_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+- AZURE_TENANT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+- AZURE_CREDS  - Comination of the above in JSON format  -  *ex: {"clientId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",  "clientSecret": "XXXXXXXXXXXXXXXXXXXXXXXX", "subscriptionId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "tenantId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"}*
 
 ### Variables
-
 The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
 
-- location = The Azure region where the application infrastructure will be deployed -  *default: "eastus"*
-- github_owner = *Github Account hosting the repository ex: "f5devcentral"*
-- repo_path = *ex: "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"*
-- github_token = *ex: "ghp_mkqCzxBci0Sl3.......rY"
-- bigip_count = 
-- workload_count = 
-- bigip_min = 
-- bigip_max = 
-- workload_min = 
-- workload_max = 
-- scale_interval = 
+- location = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
+- github_owner = Github Account hosting the repository   -  *ex: "f5devcentral"*
+- repo_path =     -  *ex: "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"*
+- github_token =   -  *ex: "ghp_mkqCzxBci0Sl3.......rY"
+- bigip_count =    -  *default: 1* 
+- workload_count =    -  *default: 2* 
+- bigip_min =    -  *default: 1* 
+- bigip_max =    -  *default: 5* 
+- workload_min =    -  *default: 2*  
+- workload_max =    -  *default: 5* 
+- scale_interval =  Interval, (in seconds) between scaling events.  Alerts fired within interval setting will fail. -  *default: 300*  
 
-
+### Deployment Steps
 
