@@ -14,11 +14,10 @@ The solution utilizes various third-party technologies/services along with F5’
    - **Hashicorp Terraform** and **Consul** for infrastructure provisioning, service discovery and event logging
    - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
 
-Deployment Steps
--------------
+## Deployment
+Since the solution utilies Github Actions for orchestration it will be necessary to [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  
 
-**Github Secrets** \
-
+### Github Secret
 
 - AZURE_CLIENT_ID
 - AZURE_CLIENT_SECRET
@@ -26,3 +25,22 @@ Deployment Steps
 - AZURE_TENANT_ID
 - AZURE_CREDS
 - GH_TOKEN
+
+### Variables
+
+The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
+
+- location = The Azure region where the application infrastructure will be deployed -  *ex: "eastus"*
+- github_owner = *ex: "f5devcentral"*
+- repo_path = *ex: "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"*
+- github_token = *ex: "ghp_mkqCzxBci0Sl3.......rY"
+- bigip_count = 
+- workload_count = 
+- bigip_min = 
+- bigip_max = 
+- workload_min = 
+- workload_max = 
+- scale_interval = 
+
+
+
