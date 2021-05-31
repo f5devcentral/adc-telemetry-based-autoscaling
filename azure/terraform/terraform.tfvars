@@ -1,7 +1,7 @@
 location = "eastus"
 AllowedIPs = ["0.0.0.0/0"]
-github_owner = "f5devcentral"
-repo_path = "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"
+github_owner = ""
+repo_path = ""
 github_token = ""
 bigip_count = 1
 workload_count = 2
