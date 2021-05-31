@@ -66,7 +66,7 @@ resource "azurerm_virtual_machine" "elkvm" {
     computer_name  = "elkvm"
     admin_username = "elkuser"
     admin_password = var.upassword
-    custom_data    = file("../configs/elk.sh")
+    custom_data    = file("elk.sh")
 
   }
 
@@ -87,8 +87,4 @@ resource "azurerm_virtual_machine" "elkvm" {
       password = var.upassword
       host     = data.azurerm_public_ip.elk_public_ip.ip_address
   }  
-}
-
-output "g_elk_public_address" {
-   value = "http://${azurerm_public_ip.elk_public_ip.ip_address}"
 }

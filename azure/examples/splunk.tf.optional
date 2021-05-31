@@ -1,45 +1,42 @@
-resource "azurerm_public_ip" "elk_public_ip" {
-  name                = "pip-mgmt-elk"
+# Deploy Splunk Enterprise instance
+
+resource "azurerm_public_ip" "splunk_public_ip" {
+  name                = "pip-mgmt-splunk"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"   # Static is required due to the use of the Standard sku
   tags = {
-    Name   = "pip-mgmt-elk"
+    Name   = "pip-mgmt-splunk"
     source = "terraform"
   }
 }
 
-data  "azurerm_public_ip" "elk_public_ip" {
-  name                = azurerm_public_ip.elk_public_ip.name
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_network_interface" "elkvm-ext-nic" {
-  name               = "${local.app_id}-elkvm-ext-nic"
+resource "azurerm_network_interface" "splunkvm-ext-nic" {
+  name               = "${local.app_id}-splunkvm-ext-nic"
   location           = var.location
   resource_group_name = azurerm_resource_group.rg.name
   ip_configuration {
     name                          = "primary"
     subnet_id                     =  data.azurerm_subnet.mgmt.id
     private_ip_address_allocation = "Static"
-    private_ip_address            = "10.2.1.125"
+    private_ip_address            = "10.2.1.135"
     primary                       = true
-    public_ip_address_id          = azurerm_public_ip.elk_public_ip.id
+    public_ip_address_id          = azurerm_public_ip.splunk_public_ip.id
   }
 
   tags = {
-    Name        = "${local.app_id}-elkvm-ext-int"
-    application = "elkserver"
+    Name        = "${local.app_id}-splunkvm-ext-int"
+    application = "splunkserver"
     tag_name    = "Env"
-    value       = "elk"
+    value       = "splunk"
   }
 }
 
-resource "azurerm_virtual_machine" "elkvm" {
-  name                  = "elkvm"
+resource "azurerm_virtual_machine" "splunkvm" {
+  name                  = "splunkvm"
   location              = var.location
   resource_group_name   = azurerm_resource_group.rg.name
-  network_interface_ids = [azurerm_network_interface.elkvm-ext-nic.id]
+  network_interface_ids = [azurerm_network_interface.splunkvm-ext-nic.id]
   vm_size               = "Standard_DS3_v2"
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
@@ -49,7 +46,7 @@ resource "azurerm_virtual_machine" "elkvm" {
   delete_data_disks_on_termination = true
   
   storage_os_disk {
-    name              = "elkvmOsDisk"
+    name              = "splunkvmOsDisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Premium_LRS"
@@ -63,10 +60,10 @@ resource "azurerm_virtual_machine" "elkvm" {
   }
 
   os_profile {
-    computer_name  = "elkvm"
-    admin_username = "elkuser"
+    computer_name  = "splunkvm"
+    admin_username = "splunk"
     admin_password = var.upassword
-    custom_data    = file("../configs/elk.sh")
+    custom_data    = file("splunk.sh")
 
   }
 
@@ -75,16 +72,10 @@ resource "azurerm_virtual_machine" "elkvm" {
   }
 
   tags = {
-    Name                = "${local.app_id}-elkvm"
+    Name                = "${local.app_id}-splunkvm"
     tag_name            = "Env"
-    value               = "elk"
+    value               = "splunk"
     propagate_at_launch = true
   }
-
-  connection {
-      type     = "ssh"
-      user     = "elkuser"
-      password = var.upassword
-      host     = data.azurerm_public_ip.elk_public_ip.ip_address
-  }  
 }
+
