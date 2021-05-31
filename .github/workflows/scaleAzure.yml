@@ -289,14 +289,13 @@ jobs:
       - name: output terraform version
         run: terraform version
     
-      
       - name: set azure creds environment variables
         run: |
           echo ::set-env name=ARM_CLIENT_ID::${{ secrets.AZURE_CLIENT_ID }}
           echo ::set-env name=ARM_CLIENT_SECRET::${{ secrets.AZURE_CLIENT_SECRET }}
           echo ::set-env name=ARM_SUBSCRIPTION_ID::${{ secrets.AZURE_SUBSCRIPTION_ID }}
           echo ::set-env name=ARM_TENANT_ID::${{ secrets.AZURE_TENANT_ID }}
-
+    
       - name: terraform init
         run: |
           cd ./azure/workflow_state
