@@ -43,6 +43,12 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 - workload_min =    -  *default: 2*  
 - workload_max =    -  *default: 5* 
 - scale_interval =  Interval, (in seconds) between scaling events.  Alerts fired within interval setting will fail. -  *default: 300*  
+- ts_consumer     = The analytics consumer connecting to (*1 = splunk   2 = elk   3 = azure log analytics -  default: 1*)
+- splunkIP        = Optional - IP address of Splunk Enterprise.  TS declaration assumes HEC listening on default port of **8088** and using HTTPS
+- splunkHEC       = Optional - Splunk HEC token
+- logStashIP      = Optional - IP address of Logstash service.  TS declaration assumes logstash listening on default port of **8080** and using HTTP
+- law_id          = Optional - Azure log analytics workspace ID
+- law_primarykey  = Optional - Azure log analytics workspace primary key
 
 ### Deployment Steps
 

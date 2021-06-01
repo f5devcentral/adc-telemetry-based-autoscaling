@@ -41,14 +41,10 @@ data "template_file" "as3_json" {
 }
 
 data "template_file" "ts_json" {
-  template   = file("${../configs/ts.json")
+  template   = file("../configs/ts_${var.ts_consumer}.json")
   vars = {
+    param_1         = "${lookup(var.ts_params_mapping_1, var.ts_consumer)}"
+    param_2         = "${lookup(var.ts_params_mapping_2, var.ts_consumer)}" 
     region          = data.azurerm_resource_group.bigiprg.location
-    splunkIP        = "206.124.129.187"
-    splunkHEC       = "f02428fa-bc2e-42de-8368-ee25fe35ef5d"
-//    logStashIP         = "10.2.1.125"
-//    law_id             = azurerm_log_analytics_workspace.law.workspace_id
-//    law_primarykey     = azurerm_log_analytics_workspace.law.primary_shared_key
-
   }
 }

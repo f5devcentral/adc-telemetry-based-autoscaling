@@ -32,10 +32,28 @@ variable scale_interval {
   default = 300
 }
 
-variable repo_path {
-  type        = string
-  description = "repo path for github actions"
-  default     = "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"
+variable ts_consumer {
+  description   = "The analytics consumer connecting to   1 = splunk   2 = elk   3 = azure log analytics"
+  type    = number
+  default = 1
+}
+
+variable "ts_params_mapping_1" {
+  description = "mapping for cross-region replication"
+  default = {
+    1 = var.splunkIP,
+    2 = var.logStashIP,
+    3 = var.law_id
+  }
+}
+
+variable "ts_params_mapping_2" {
+  description = "mapping for cross-region replication"
+  default = {
+    1 = var.splunkHEC,
+    2 = "",
+    3 = var.law_primarykey
+  }
 }
 
 variable app_name {
@@ -60,13 +78,19 @@ variable github_owner {
   default     = ""
 }
 
+variable repo_path {
+  type        = string
+  description = "repo path for github actions"
+  default     = "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"
+}
+
 variable prefix {
   description = "Prefix for resources created by this module"
   type        = string
   default     = "application"
 }
 
-variable location {default = "East US"}
+variable location {default = "eastus"}
 
 variable cidr {
   description = "Azure VPC CIDR"

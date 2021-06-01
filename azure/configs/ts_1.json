@@ -13,12 +13,12 @@
     "My_Consumer": {
         "class": "Telemetry_Consumer",
         "type": "Splunk",
-        "host": "${splunkIP}",
+        "host": "${param_1}",
         "protocol": "https",
         "port": 8088,
         "allowSelfSignedCert": true,
         "passphrase": {
-            "cipherText": "${splunkHEC}"
+            "cipherText": "${param_2}"
         }
     }
 }

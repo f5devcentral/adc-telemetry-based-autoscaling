@@ -15,9 +15,9 @@
   "My_LAW_Consumer": {
     "class": "Telemetry_Consumer",
     "type": "Azure_Log_Analytics",
-    "workspaceId": "${law_id}",
+    "workspaceId": "${param_1}",
     "passphrase": {
-        "cipherText": "${law_primarykey}"
+        "cipherText": "${param_2}"
     },
     "useManagedIdentity": false,
     "region": "${region}"   
