@@ -18,7 +18,7 @@ data "template_file" "init_file" {
 }
 
 data "template_file" "vm01_do_json" {
-  template = file("${path.module}/do.json")
+  template = file("../configs/do.json")
 
   vars = {
     hostname        = local.hostname
@@ -32,7 +32,7 @@ data "template_file" "vm01_do_json" {
 
 data "template_file" "as3_json" {
   depends_on = [null_resource.azure_cli_add]
-  template = file("${path.module}/as3.json")
+  template = file("../configs/as3.json")
   vars = {
     web_pool        = "myapp-${var.app}"
     app_name        = var.app_name
@@ -40,35 +40,15 @@ data "template_file" "as3_json" {
   }
 }
 
-# Create Log Analytic Workspace
-
-resource "azurerm_log_analytics_workspace" "law" {
-  name                = "log-analytics-workspace"
-  sku                 = "PerNode"
-  retention_in_days   = 300
-  resource_group_name = data.azurerm_resource_group.bigiprg.name
-  location            = data.azurerm_resource_group.bigiprg.location
-}
-
-resource "azurerm_log_analytics_solution" "sentinel" {
-  solution_name         = "SecurityInsights"
-  location            = data.azurerm_resource_group.bigiprg.location
-  resource_group_name = data.azurerm_resource_group.bigiprg.name
-  workspace_resource_id = azurerm_log_analytics_workspace.law.id
-  workspace_name        = azurerm_log_analytics_workspace.law.name
-  plan {
-    publisher = "Microsoft"
-    product   = "OMSGallery/SecurityInsights"
-  }
-}
-
 data "template_file" "ts_json" {
-  template   = file("${path.module}/ts.json")
+  template   = file("${../configs/ts.json")
   vars = {
-//    logStashIP      = "10.2.1.125"
-//    splunkIP        = "10.2.1.135"
-    law_id            = azurerm_log_analytics_workspace.law.workspace_id
-    law_primarykey     = azurerm_log_analytics_workspace.law.primary_shared_key
-    region            = data.azurerm_resource_group.bigiprg.location
+    region          = data.azurerm_resource_group.bigiprg.location
+    splunkIP        = "206.124.129.187"
+    splunkHEC       = "f02428fa-bc2e-42de-8368-ee25fe35ef5d"
+//    logStashIP         = "10.2.1.125"
+//    law_id             = azurerm_log_analytics_workspace.law.workspace_id
+//    law_primarykey     = azurerm_log_analytics_workspace.law.primary_shared_key
+
   }
 }

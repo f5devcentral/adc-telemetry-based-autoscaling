@@ -46,3 +46,8 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 
 ### Deployment Steps
 
+1. [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into GitHub account under your control.
+2. Clone newly created repo locally.
+3. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
+4. Navigate to scripts directory, (*cd adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script deploys the application infrastructure as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.
+
