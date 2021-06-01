@@ -14,17 +14,17 @@ The Elastic ELK stack provides centralized storage, analysis and visualization o
 
 2. From the center panel, select '*Create index pattern*', (see below).
 
-   .. image:: ../../images/index_1.png
+   <img src="../../images/index_1.png" alt="Flowers">
 
 3. On the *Create Index Pattern* screen enter ``f5-*`` for the index pattern name.  As the example below illustrates, you should see
    several indexes listed below.  As telemetry data is streamed from the BIG-IP(s) to the ELK stack, (via Logstash - the '*L*' in ELK)
    it is assigned an index with a pattern of **f5-%{+YYYY.MM.dd.hh.mm}**.  Click '*Next Step*' to continue.
 
-   .. image:: ../../images/index_2.png
+   <img src="../../images/index_2.png" alt="Flowers">
 
 4. Select **@timestamp** from the drop-down list for the '*Time Field*'.  Select '*Create index pattern*' to complete the process.
 
-   .. image:: ../../../../images/index_3.png
+   <img src="../../images/index_3.png" alt="Flowers">
 
 
 **Create Watcher Alerts**
@@ -33,7 +33,7 @@ The Elastic ELK stack provides centralized storage, analysis and visualization o
 You will be using Elastic Watcher to monitor telemetry data and provide alert notifications.  While still in the *Stack Management*
 submenu navigate to and select '*Watcher*', (see above).  From the center panel select '*Create*' and then '*Create threshold alert*'.
 
-   .. image:: ../../images/create_watch.png
+   <img src="../../images/create_watch.png" alt="Flowers">
 
 For this solution create a total of four (4) alerts.  These alerts will monitor and respond to increases/decreases in BIG-IP CPU
 utilization and current application connections.  In the event a member BIG-IP's CPU utilization exceeds or falls below the specified thresholds during the specified interval, an alert will fire triggering a webhook call to the *alertForwarder* service. 
@@ -50,17 +50,17 @@ scaling BIG-IP instances, this will trigger a scaling (up/down) of the backend a
    environment has been configured with hard limits of (3) BIG-IP instances and (3) workload instances to ensure availability of
    resources for all students.  Additionally, the ADPM processor is designed to throttle requests and prevent superfluous "over-scaling".  Requests that are triggered but not fullfilled, (along with successful requests) are logged on your environment's Consul server.  
 
-   .. image:: ../../images/alert_1.png
+   <img src="../../images/alert_1.png" alt="Flowers">
 
 #. In the *Actions* section select '*Add action*'.  From the menu pop-up select '*Webhook*', (see below).
    
-   .. image:: ../../images/alert_2.png
+   <img src="../../images/alert_2.png" alt="Flowers">
 
 #. Use the below example to complete the webhook section.  When you are done select '*Create alert*'.  Specifiy ``alertforwarder.f5demo.net`` for the Host. For the webhook body 
    enter ``{"source": "elk", "scaleAction":"scaleOutBigip", "message": "{{ctx.payload}}"}``.  The *alertForwarder* service is expecting the JSON formatted 
    payload and will parse according to source. The *alertForwarder* call the central processer, (via webhook) to trigger scaling.
 
-   .. image:: ../../images/alert_3.png
+   <img src="../../images/alert_3.png" alt="Flowers">
 
 #. Use the table and example images below to create three additional alerts.  Entries not noted in the table below are identical 
    across alerts.
@@ -99,10 +99,10 @@ scaling BIG-IP instances, this will trigger a scaling (up/down) of the backend a
       - 5 minutes
       - ``{"source": "elk", "scaleAction":"scaleOutWorkload", "message": "{{ctx.payload}}"}``
 
-   .. image:: ../../images/alerts.png
+   <img src="../../images/alerts.png" alt="Flowers">
 
 Below is an example of a completed Watcher screen.  TS logs are streamed in 60-second intervals.  Depending upon how you set
 your thresholds, you may already have alerts firing. The Watcher screen provides one way to monitor alert events.
 
-   .. image:: ../../images/alert_final.png
+   <img src="../../images/alert_final.png" alt="Flowers">
 
