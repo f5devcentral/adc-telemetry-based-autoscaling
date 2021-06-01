@@ -10,7 +10,7 @@ The Elastic ELK stack provides centralized storage, analysis and visualization o
    BIG-IP telemetry.  Log into the Kibana GUI portal.  From the upper-left corner select the menu icon and navigate down the sidebar menu to the '*Analytics*'
    section and select '*Discover*', (see below).
 
-   .. image:: ../../images/elk_discover.png
+   <img src="../../images/elk_discover.png" alt="Flowers">
 
 2. From the center panel, select '*Create index pattern*', (see below).
 
