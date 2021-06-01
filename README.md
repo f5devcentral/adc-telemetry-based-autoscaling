@@ -6,17 +6,17 @@ This solution, (see below) illustrates how F5's Automation Toolchain can integra
 
 The solution utilizes various third-party technologies/services along with F5’s automation toolchain including:
    
+   - **Hashicorp Terraform** and **Consul** for infrastructure provisioning, service discovery and event logging
    - **F5 BIG-IP(s)** providing L4/L7 ADC Services
    - **F5 Declarative Onboarding**, (DO) and **Application Services 3 Extension**, (AS3) to deploy to configure BIG-IP application services
    - **F5 Telemetry Streaming**, (TS) to stream telemetry data to a third party analytics provider
    - **GitHub Actions** for workflow automation 
    - **Azure** public cloud for application hosting
-   - **Hashicorp Terraform** and **Consul** for infrastructure provisioning, service discovery and event logging
    - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
 
 
 ## Deploying the Solution
-Since the solution utilies Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  After which you can clone the newly created repo locally to perform the initial application infrastructure deployment.
+Since the solution relies on Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  After which you can clone the newly created repo locally to perform the initial application infrastructure deployment.
 
 
 ### GitHub Secrets
@@ -29,7 +29,7 @@ Create the following [GitHub secrets](https://docs.github.com/en/actions/referen
 - AZURE_TENANT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_CREDS  - Comination of the above in JSON format  -  *ex: {"clientId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",  "clientSecret": "XXXXXXXXXXXXXXXXXXXXXXXX", "subscriptionId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "tenantId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"}*
 
-### Variables
+### Terraform Variables
 The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
 
 - location = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
