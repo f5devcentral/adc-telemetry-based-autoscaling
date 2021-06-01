@@ -6,23 +6,23 @@ The Elastic ELK stack provides centralized storage, analysis and visualization o
 **Create Index Pattern**
 -------------------------------------
 
-#. Create an index pattern.  The index pattern will provide a starting base in which to query ingested
+1. Create an index pattern.  The index pattern will provide a starting base in which to query ingested
    BIG-IP telemetry.  Log into the Kibana GUI portal.  From the upper-left corner select the menu icon and navigate down the sidebar menu to the '*Analytics*'
    section and select '*Discover*', (see below).
 
    .. image:: ../../images/elk_discover.png
 
-#. From the center panel, select '*Create index pattern*', (see below).
+2. From the center panel, select '*Create index pattern*', (see below).
 
    .. image:: ../../images/index_1.png
 
-#. On the *Create Index Pattern* screen enter ``f5-*`` for the index pattern name.  As the example below illustrates, you should see
+3. On the *Create Index Pattern* screen enter ``f5-*`` for the index pattern name.  As the example below illustrates, you should see
    several indexes listed below.  As telemetry data is streamed from the BIG-IP(s) to the ELK stack, (via Logstash - the '*L*' in ELK)
    it is assigned an index with a pattern of **f5-%{+YYYY.MM.dd.hh.mm}**.  Click '*Next Step*' to continue.
 
    .. image:: ../../images/index_2.png
 
-#. Select **@timestamp** from the drop-down list for the '*Time Field*'.  Select '*Create index pattern*' to complete the process.
+4. Select **@timestamp** from the drop-down list for the '*Time Field*'.  Select '*Create index pattern*' to complete the process.
 
    .. image:: ../../../../images/index_3.png
 
