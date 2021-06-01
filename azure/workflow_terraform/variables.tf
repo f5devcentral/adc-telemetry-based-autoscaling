@@ -1,3 +1,27 @@
+variable splunkIP {
+  type = string
+}    
+
+variable splunkHEC {
+  type = string
+}     
+
+variable logStashIP {
+  type = string
+}
+
+variable law_id {
+  type = string
+}         
+
+variable law_primarykey {
+  type = string
+}  
+
+variable ts_consumer {
+  type    = number
+}
+
 variable app_name {
   type    = string
   default = "sample_app"

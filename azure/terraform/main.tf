@@ -88,16 +88,21 @@ resource "null_resource" "azure-cli" {
 #Create N-nic bigip
 #
 module bigip {
-  count 		                 = var.bigip_count
-  source                     = "../f5module/"
-  prefix                     = format("application-%s-1nic", var.prefix)
-  resource_group_name        = azurerm_resource_group.rg.name
-  mgmt_subnet_ids            = [{ "subnet_id" = data.azurerm_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" =  ""}]
-  mgmt_securitygroup_ids     = [module.mgmt-network-security-group.network_security_group_id]
-  availabilityZones          = var.availabilityZones
-  app_name                   = var.app_name
-  consul_ip                  = var.consul_ip
-  app_id                     = local.app_id
+  count 		                = var.bigip_count
+  source                    = "../f5module/"
+  prefix                    = format("application-%s-1nic", var.prefix)
+  resource_group_name       = azurerm_resource_group.rg.name
+  mgmt_subnet_ids           = [{ "subnet_id" = data.azurerm_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" =  ""}]
+  mgmt_securitygroup_ids    = [module.mgmt-network-security-group.network_security_group_id]
+  availabilityZones         = var.availabilityZones
+  app_name                  = var.app_name
+  consul_ip                 = var.consul_ip
+  app_id                    = local.app_id
+  splunkIP                  = var.splunkIP
+  splunkHEC                 = var.splunkHEC
+  logStashIP                = var.logStashIP
+  law_id                    = var.law_id
+  law_primarykey            = var.law_primarykey
 
   providers = {
     consul = consul

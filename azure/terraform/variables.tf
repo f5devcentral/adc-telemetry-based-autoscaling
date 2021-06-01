@@ -1,3 +1,29 @@
+variable splunkIP {
+  type = string
+}    
+
+variable splunkHEC {
+  type = string
+}     
+
+variable logStashIP {
+  type = string
+}
+
+variable law_id {
+  type = string
+}         
+
+variable law_primarykey {
+  type = string
+}  
+
+variable ts_consumer {
+  description   = "The analytics consumer connecting to   1 = splunk   2 = elk   3 = azure log analytics"
+  type    = number
+  default = 1
+}
+
 variable bigip_count {
   description = "Number of Bigip instances to create( From terraform 0.13, module supports count feature to spin mutliple instances )"
   type        = number
@@ -30,30 +56,6 @@ variable workload_max {
 variable scale_interval {
   type    = number
   default = 300
-}
-
-variable ts_consumer {
-  description   = "The analytics consumer connecting to   1 = splunk   2 = elk   3 = azure log analytics"
-  type    = number
-  default = 1
-}
-
-variable "ts_params_mapping_1" {
-  description = "mapping for cross-region replication"
-  default = {
-    1 = var.splunkIP,
-    2 = var.logStashIP,
-    3 = var.law_id
-  }
-}
-
-variable "ts_params_mapping_2" {
-  description = "mapping for cross-region replication"
-  default = {
-    1 = var.splunkHEC,
-    2 = "",
-    3 = var.law_primarykey
-  }
 }
 
 variable app_name {
