@@ -19,8 +19,16 @@ jobs:
       we_set_running: ${{ steps.check_running.outputs.we_set_running }}
       bigip_current_count: ${{ steps.current.outputs.bigip_current_count }}
       app_current_count: ${{ steps.current.outputs.app_current_count }}
+      ts_consumer: ${{ steps.current.outputs.ts_consumer }}
+      splunkIP: ${{ steps.current.outputs.splunkIP }}
+      splunkHEC: ${{ steps.current.outputs.splunkHEC }}
+      logStashIP: ${{ steps.current.outputs.logStashIP }}
+      law_id: ${{ steps.current.outputs.law_id }}
+      law_primarykey: ${{ steps.current.outputs.law_primarykey }}
+      location: ${{ steps.current.outputs.location }}
+      repo_path: ${{ steps.current.outputs.repo_path }}
+      github_owner: ${{ steps.current.outputs.github_owner }}      
     steps:
-
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJSON(github) }}
@@ -48,13 +56,10 @@ jobs:
       - name: output context
         id: json
         run: echo ::set-output name=gh_context::$( "${{ toJSON(github) }}" )
-
       - name: output run id
         run: echo "THIS IS THE CONTEXT ${{ steps.json.outputs.gh_context }}"
-
       - name: output workflow run number
         run: echo "This is the workflow run number $GITHUB_RUN_NUMBER"
-
       - name: grab current time
         id: current_time_seconds
         run: echo ::set-output name=current_time_seconds::$(date +%s)
