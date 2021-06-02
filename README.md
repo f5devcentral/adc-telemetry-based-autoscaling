@@ -57,7 +57,7 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 
 With the Terraform deployment completed, you should be presented with outputs similar to below.
 
-<img src="images/outputs.png" alt="Flowers">
+<img src="images/output.png" alt="Flowers">
 
 ## Configuring Alerts
 
