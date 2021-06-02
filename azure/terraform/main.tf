@@ -499,7 +499,6 @@ resource "consul_keys" "app" {
     path  = format("adpm/applications/%s/terraform/outputs/application_address", local.app_id )
     value = "https://${azurerm_public_ip.nlb_public_ip.ip_address}"
   }
-
   key {
     path  = format("adpm/applications/%s/github_owner", local.app_id)
     value = var.github_owner
@@ -519,7 +518,8 @@ resource "consul_keys" "app" {
     path  = format("adpm/applications/%s/splunkHEC", local.app_id)
     value = var.splunkHEC
   }
-    path  = format("adpm/applications/%s/logStashIP", local.app_id)
+  key {
+     path  = format("adpm/applications/%s/logStashIP", local.app_id)
     value = var.logStashIP
   }
   key {
