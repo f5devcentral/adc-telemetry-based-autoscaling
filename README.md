@@ -62,5 +62,5 @@ The alertforwarder service
 
 ### Analytics Providers
 
-The alertforwarder service currently supports alerts received from the following TS consumer: Splunk, Elastic Watcher/Kibana, and Azure Log Analytics.  A brief overview for each of the listed vendors is available below.  For detailed guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the 'azure/ts_consumers' directory.
+The alertforwarder service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, and **Azure Log Analytics**.  A brief overview for each of the listed vendors is available below.  For detailed guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the 'azure/ts_consumers' directory.
 
