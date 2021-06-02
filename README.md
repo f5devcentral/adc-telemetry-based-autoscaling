@@ -55,6 +55,10 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 
 1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).
 
+With the Terraform deployment completed, you should be presented with outputs similar to below.
+
+<img src="images/outputs.png" alt="Flowers">
+
 ## Configuring Alerts
 
 ### The AlertForwarder service
