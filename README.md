@@ -53,7 +53,14 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 
 1. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
 
-1. Navigate to scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.
+1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).
 
-1. Optional - Once the initial deployment is complete, it is no longer necessary to retain the local repo clone.  
+## Configuring Alerts
+
+### The AlertForwarder service
+The alertforwarder service 
+
+### Analytics Providers
+
+The alertforwarder service currently supports alerts received from the following TS consumer: Splunk, Elastic Watcher/Kibana, and Azure Log Analytics.  A brief overview for each of the listed vendors is available below.  For detailed guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the 'azure/ts_consumers' directory.
 
