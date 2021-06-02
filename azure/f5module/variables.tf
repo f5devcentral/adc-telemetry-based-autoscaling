@@ -1,3 +1,27 @@
+variable splunkIP {
+  type = string
+}    
+
+variable splunkHEC {
+  type = string
+}     
+
+variable logStashIP {
+  type = string
+}
+
+variable law_id {
+  type = string
+}         
+
+variable law_primarykey {
+  type = string
+}  
+
+variable ts_consumer {
+  type    = number
+}
+
 variable prefix {
   description = "Prefix for resources created by this module"
   type        = string
@@ -121,9 +145,6 @@ variable "tls_cert" {default = ""}
 variable "tls_key" {default = ""} 
 variable "cipherText" {default = ""}
 variable "protectedVal" {default = ""}
-
-variable "logStashIP" {default = "10.2.1.125"}
-variable "logStashPort" {default = "8080"}
 
 ## Please check and update the latest DO URL from https://github.com/F5Networks/f5-declarative-onboarding/releases
 # always point to a specific version in order to avoid inadvertent configuration inconsistency

@@ -1,17 +1,18 @@
+# Setup Onboarding scripts
+
 locals {
-  ts_params_1 = {
-    1 = var.splunkIP,
-    2 = var.logStashIP,
+  params_map_1 =  {
+    1 = var.splunkIP
+    2 = var.logStashIP
     3 = var.law_id
   }
-  ts_params_2 = {
-    1 = var.splunkHEC,
-    2 = "",
+  params_map_2 = {
+    1 = var.splunkHEC
+    2 = ""
     3 = var.law_primarykey
   }
 }
 
-# Setup Onboarding scripts
 data "template_file" "init_file" {
   template = file("${path.module}/onboard.tpl")
 
@@ -54,10 +55,10 @@ data "template_file" "as3_json" {
 }
 
 data "template_file" "ts_json" {
-  template   = file("../configs/ts_${var.ts_consumer}.json")
+  template = file("../configs/ts_${var.ts_consumer}.json")
   vars = {
-    param_1         = local.ts_params_1[var.ts_consumer]
-    param_2         = ocal.ts_params_2[var.ts_consumer]
-    region          = data.azurerm_resource_group.bigiprg.location
+    param_1 = local.params_map_1[var.ts_consumer]
+    param_2 = local.params_map_2[var.ts_consumer]
+    region  = data.azurerm_resource_group.bigiprg.location
   }
 }

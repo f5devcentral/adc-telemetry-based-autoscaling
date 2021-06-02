@@ -71,7 +71,6 @@ variable github_token {
 variable github_owner {
   type        = string
   description = "repo owner required to update secrets"
-  default     = ""
 }
 
 variable prefix {
@@ -80,7 +79,8 @@ variable prefix {
   default     = "application"
 }
 
-variable location {default = "East US"}
+variable location {
+}
 
 variable cidr {
   description = "Azure VPC CIDR"
@@ -97,6 +97,7 @@ variable availabilityZones {
 }
 
 variable AllowedIPs {
+  default = ["0.0.0.0/0"]
 }
 
 # TAGS

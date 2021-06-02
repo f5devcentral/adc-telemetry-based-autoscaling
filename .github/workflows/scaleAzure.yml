@@ -117,6 +117,24 @@ jobs:
 
           echo ::set-output name=bigip_current_count::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/scaling/bigip/current_count)
 
+          echo ::set-output name=ts_consumer::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/ts_consumer)
+
+          echo ::set-output name=splunkIP::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/splunkIP)
+          
+          echo ::set-output name=splunkHEC::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/splunkHEC)
+          
+          echo ::set-output name=logStashIP::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/logStashIP)
+          
+          echo ::set-output name=law_id::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/law_id)
+          
+          echo ::set-output name=law_primarykey::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/law_primarykey)
+          
+          echo ::set-output name=location::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/location)
+          
+          echo ::set-output name=github_owner::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/github_owner)
+          
+          echo ::set-output name=repo_path::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/repo_path)
+
       - name: output last modified times
         id: seconds
         run: |
@@ -324,12 +342,12 @@ jobs:
       - name: terraform plan
         run: |
           cd ./azure/workflow_terraform
-          terraform plan -var 'github_token=${{ secrets.GH_TOKEN }}'
+          terraform plan -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'location=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
        
       - name: terraform apply
         run: |
           cd ./azure/workflow_terraform
-          terraform apply --auto-approve -var 'github_token=${{ secrets.GH_TOKEN }}'
+          terraform apply --auto-approve -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'location=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
     
       - name: terraform output
         run: |

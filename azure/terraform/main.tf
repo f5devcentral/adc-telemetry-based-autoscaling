@@ -103,6 +103,7 @@ module bigip {
   logStashIP                = var.logStashIP
   law_id                    = var.law_id
   law_primarykey            = var.law_primarykey
+  ts_consumer               = var.ts_consumer
 
   providers = {
     consul = consul
@@ -497,6 +498,41 @@ resource "consul_keys" "app" {
   key {
     path  = format("adpm/applications/%s/terraform/outputs/application_address", local.app_id )
     value = "https://${azurerm_public_ip.nlb_public_ip.ip_address}"
+  }
+
+  key {
+    path  = format("adpm/applications/%s/github_owner", local.app_id)
+    value = var.github_owner
+  }
+  key {
+    path  = format("adpm/applications/%s/repo_path", local.app_id)
+    value = var.repo_path
+  }
+    path  = format("adpm/applications/%s/ts_consumer", local.app_id)
+    value = var.ts_consumer
+  }
+  key {
+    path  = format("adpm/applications/%s/splunkIP", local.app_id)
+    value = var.splunkIP
+  }
+  key {
+    path  = format("adpm/applications/%s/splunkHEC", local.app_id)
+    value = var.splunkHEC
+  }
+    path  = format("adpm/applications/%s/logStashIP", local.app_id)
+    value = var.logStashIP
+  }
+  key {
+    path  = format("adpm/applications/%s/law_id", local.app_id)
+    value = var.law_id
+  }
+  key {
+    path  = format("adpm/applications/%s/law_primarykey", local.app_id)
+    value = var.law_primarykey
+  }
+  key {
+    path  = format("adpm/applications/%s/location", local.app_id )
+    value = var.location
   }
 }
 

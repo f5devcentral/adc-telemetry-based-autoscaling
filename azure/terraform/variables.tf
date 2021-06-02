@@ -21,7 +21,6 @@ variable law_primarykey {
 variable ts_consumer {
   description   = "The analytics consumer connecting to   1 = splunk   2 = elk   3 = azure log analytics"
   type    = number
-  default = 1
 }
 
 variable bigip_count {

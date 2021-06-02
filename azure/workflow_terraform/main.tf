@@ -95,6 +95,12 @@ module bigip {
   app_name                   = var.app_name
   consul_ip                  = var.consul_ip
   app_id                     = local.app_id
+  splunkIP                  = var.splunkIP
+  splunkHEC                 = var.splunkHEC
+  logStashIP                = var.logStashIP
+  law_id                    = var.law_id
+  law_primarykey            = var.law_primarykey
+  ts_consumer               = var.ts_consumer
 
   providers = {
     consul = consul
