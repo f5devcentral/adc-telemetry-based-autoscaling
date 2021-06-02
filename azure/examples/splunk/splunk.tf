@@ -80,5 +80,5 @@ resource "azurerm_virtual_machine" "splunkvm" {
 }
 
 output "splunk_public_address" {
-   value = "http://${azurerm_public_ip.splunk_public_ip.ip_address}:8000"
+   value = "https://${azurerm_public_ip.splunk_public_ip.ip_address}:8000"
  }
