@@ -15,10 +15,6 @@ The solution utilizes various third-party technologies/services along with F5’
    - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
 
 
-## Deploying the Solution
-Since the solution relies on Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  After which you can clone the newly created repo locally to perform the initial application infrastructure deployment.
-
-
 ### GitHub Secrets
 Create the following [GitHub secrets](https://docs.github.com/en/actions/reference/encrypted-secrets).  The secrets will be utilized by the actions workflow to securely update the Azure deployment. You will need to provide [Azure service prinicipal credentials](https://github.com/marketplace/actions/azure-login) as well as a [GitHub acces token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your repository.
 
@@ -28,6 +24,7 @@ Create the following [GitHub secrets](https://docs.github.com/en/actions/referen
 - AZURE_SUBSCRIPTION_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_TENANT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_CREDS  - Comination of the above in JSON format  -  *ex: {"clientId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",  "clientSecret": "XXXXXXXXXXXXXXXXXXXXXXXX", "subscriptionId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "tenantId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"}*
+
 
 ### Terraform Variables
 The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
@@ -50,10 +47,13 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 - law_id          = Optional - Azure log analytics workspace ID
 - law_primarykey  = Optional - Azure log analytics workspace primary key
 
-### Deployment Steps
 
-1. [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into GitHub account under your control.
-2. Clone newly created repo locally.
+### Deploying the Solution
+1. Duplicate the repo - Since the solution relies on Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  Clone the newly created repo locally to perform the initial app infrastructure deployment.
+
 3. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
-4. Navigate to scripts directory, (*cd adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script deploys the application infrastructure as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.
+
+4. Navigate to scripts directory, (*cd adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.
+
+5. Optional - Once the initial deployment is complete, it is no longer necessary to retain the local repo clone.  
 
