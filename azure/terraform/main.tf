@@ -507,6 +507,7 @@ resource "consul_keys" "app" {
     path  = format("adpm/applications/%s/repo_path", local.app_id)
     value = var.repo_path
   }
+  key {
     path  = format("adpm/applications/%s/ts_consumer", local.app_id)
     value = var.ts_consumer
   }
