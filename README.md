@@ -62,7 +62,7 @@ With the Terraform deployment completed, you should be presented with outputs si
 ## Configuring Alerts
 
 ### The AlertForwarder service
-The alertforwarder service 
+The AlertForwwarder is a simple N  odeJS service deployed as part of the application infrastructure and has the sole purpose of receiving 
 
 ### Analytics Providers
 
