@@ -55,7 +55,7 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 
 1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).
 
-With the Terraform deployment completed, you should be presented with outputs similar to below.
+With the Terraform deployment completed, you should be presented with outputs similar to below.  The outputs provide the endpoints to interact with environment.  Before continuing on to the next steps, (configuring alerts) take a few minutes to familiarize yourself with the environment.
 
 <img src="images/output.png" alt="Flowers">
 
@@ -67,4 +67,6 @@ The AlertForwwarder is a simple NodeJS service that is deployed on an Ubuntu vir
 ### Analytics Providers
 
 The alertforwarder service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, and **Azure Log Analytics**.  A brief overview for each of the listed vendors is available below.  For detailed guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the 'azure/ts_consumers' directory.
+
+
 
