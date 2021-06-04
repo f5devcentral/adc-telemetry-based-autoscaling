@@ -57,7 +57,7 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 
 With the Terraform deployment completed, you should be presented with outputs similar to below.  The outputs provide the endpoints to interact with environment.  Before continuing on to the next steps, (configuring alerts) take a few minutes to familiarize yourself with the environment.
 
-<img src="images/output.png" alt="Flowers">
+<img src="images/output.png" alt="Flowers"  width="500">
 
 ## Configuring Alerts
 
