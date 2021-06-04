@@ -16,5 +16,5 @@ output "d_consul_public_address" {
  }
 
 output "e_AlertForwarder_public_address" {
-   value = "http://${azurerm_public_ip.af_public_ip.ip_address}:8000"
+   value = "https://${azurerm_public_ip.af_public_ip.ip_address}:8000"
 }

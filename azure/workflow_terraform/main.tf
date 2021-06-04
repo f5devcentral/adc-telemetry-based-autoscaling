@@ -101,6 +101,8 @@ module bigip {
   law_id                    = var.law_id
   law_primarykey            = var.law_primarykey
   ts_consumer               = var.ts_consumer
+  tls_cert                  = var.tls_cert
+  tls_key                   = var.tls_key
 
   providers = {
     consul = consul
@@ -424,7 +426,7 @@ data "azurerm_public_ip" "consul_public_ip" {
 }
 
 #
-# Update central consul server
+# Update consul server
 #
 resource "consul_keys" "app" {
   datacenter = "dc1"
@@ -493,6 +495,8 @@ data "template_file" "alertfwd" {
   vars = {
     github_token    = var.github_token
     repo_path       = var.repo_path
+    tls_cert        = var.tls_cert
+    tls_key         = var.tls_key
   }
 }
 

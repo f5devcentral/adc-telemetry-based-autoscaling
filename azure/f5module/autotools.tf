@@ -51,6 +51,8 @@ data "template_file" "as3_json" {
     web_pool        = "myapp-${var.app}"
     app_name        = var.app_name
     consul_ip       = var.consul_ip
+    tls_cert        = var.tls_cert
+    tls_key         = var.tls_key
   }
 }
 

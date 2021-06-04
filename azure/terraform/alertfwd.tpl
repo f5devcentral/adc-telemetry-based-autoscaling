@@ -1,21 +1,28 @@
 #!/bin/bash
 sudo apt update && curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - && sudo apt-get -y install nodejs
 sudo cat << EOF > /home/afuser/alertforwarder.js
-const express = require( 'express' );
-const app = express();
-const bodyParser = require('body-parser');
-const https = require('https')
-const http = require('http');
 const token = "${github_token}" //Required to authenticate with Github action repo
 const repoPath  = '${repo_path}'  //Modify to match designated github action repo
+const express = require( 'express' );
+const app = express();
+const fs = require('fs');
+const bodyParser = require('body-parser');
+const https = require('https');
+const http = require('http');
+const args = process.argv.slice(2) //Required to authenticate with Github action repo
+const repoPath  = '/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches'  //Modify to match designated github action repo
  
  /*  
  Create Listening server - receive alerts from analytics provider
  */
+ const options = {
+  key: "${tls_key}",
+  cert: "${tls_cert}"
+};
 
- http.createServer((request, response) => {
+ https.createServer(options, function (request, response) {
   if (request.method == 'POST') {
-
+    
     const { headers, method, url } = request;
     let body = [];
     request.on('error', (err) => {
@@ -29,10 +36,11 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
      source = bodyJson.source;
      scaleAction = bodyJson.scaleAction;
      console.log(bodyJson);
+      
 
      if (scaleAction == null){
         console.log("error with scaleaction");
-        esponse.end();
+        response.end();
       };
 
      if (source == "azureLogs"){
@@ -46,15 +54,20 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
       hostName = message.substring(hostIndex, hostIndex + 20)
-    
+      poolName = ""
+
     } else if (source == 'splunk') {
       analytic = "splunk"
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
       hostName = message.substring(hostIndex, hostIndex + 20)
-    } 
     
-     //Convert hostName to arrays and derive identifiers
+    } else {
+      console.log("Invalid nalytics source specified")
+      response.end();
+    }
+
+     //Convert hostName and poolName to arrays and derive identifiers
      var n = hostName.split(".");
      app_id = n[2];
 
@@ -105,7 +118,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
        headers: {
          'Content-Type': 'application/json',
          'Content-Length': data2.length,
-         'Authorization': 'token ' + token,
+         'Authorization': 'token ' + args[0],
          'user-agent': 'node.js'
        }
     }
@@ -114,7 +127,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
     Create https POST to github
     */
     const req2 = https.request(options, res2 => {
-      console.log(`Post to Github returned status code`)
+      console.log(`Post to Github returned status code of: ${res2.statusCode}`)
       console.log("Processing operation complete.\n")
      
       res2.on('data', d => {
@@ -142,12 +155,13 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
      });
     }
     else {
+      console.log("Invalid HTTP method");
       response.end();
     }
 
   // Start listener
-  console.log("Starting alert processor...\n")
-  }).listen(8000);
+  console.log("Starting alert processor...\n");
+  }).listen(8000); 
 EOF
 cd /home/afuser && npm install request && npm install express && npm install body-parser && npm install http && npm install https && sudo chmod +x /home/afuser/alertforwarder.js
 
