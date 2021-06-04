@@ -77,4 +77,4 @@ The AF service currently supports alerts received from the following TS consumer
 
 <img src="images/splunk1.png" alt="Flowers"  width="700">
 
-<img src="images/splunk3.png" alt="Flowers"  width="700">
+<img src="images/splunk3.png" alt="Flowers">
