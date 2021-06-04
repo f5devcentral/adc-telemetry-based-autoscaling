@@ -36,18 +36,17 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
      scaleAction = bodyJson.scaleAction;
      console.log(bodyJson);
       
-
      if (scaleAction == null){
         console.log("error with scaleaction");
         response.end();
       };
 
-     if (source == "azureLogs"){
+     if (source == "azurelaw"){
       vals = bodyJson.SearchResults.tables[0].rows[0].toString();
       var hostIndex = vals.search("bigip.azure")
       hostName = vals.substring(hostIndex, hostIndex + 20)
 
-    } else if (source == 'elk' || source == 'splunk') {
+    } else if (source == 'elk' || source == 'splunk' || source == 'default') {
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
       hostName = message.substring(hostIndex, hostIndex + 20)
