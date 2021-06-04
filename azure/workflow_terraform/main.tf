@@ -491,7 +491,7 @@ resource "consul_keys" "app" {
 #
 
 data "template_file" "alertfwd" {
-  template          = file("alertfwd.tpl")
+  template          = file("../configs/alertfwd.tpl")
   vars = {
     github_token    = var.github_token
     repo_path       = var.repo_path

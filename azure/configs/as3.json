@@ -179,7 +179,7 @@
 					"class": "Certificate",
 					"remark": "in practice we recommend using a passphrase",
 					"certificate": "${tls_cert}",
-					"privateKey": "{tls_key}"	
+					"privateKey": "${tls_key}"	
 				}
 			}
 		}
