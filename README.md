@@ -62,7 +62,9 @@ With the Terraform deployment completed, you should be presented with outputs si
 ## Configuring Alerts
 
 ### The AlertForwarder service
-The AlertForwwarder is a simple NodeJS service that is deployed on an Ubuntu virtual machine instance as part of the application infrastructure The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow. 
+The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubuntu virtual machine instance as part of the application infrastructure The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow.
+
+The AF service exposes an single endpoint, (*ex: https://<<AF_IPaddress>>:8000*) to receive incoming webhook calls.  Refer to the deployment output for the 
 
 ### Analytics Providers
 
