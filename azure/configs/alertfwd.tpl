@@ -43,30 +43,21 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
       };
 
      if (source == "azureLogs"){
-      analytic = "azure"
       vals = bodyJson.SearchResults.tables[0].rows[0].toString();
       var hostIndex = vals.search("bigip.azure")
       hostName = vals.substring(hostIndex, hostIndex + 20)
 
-    } else if (source == 'elk') {
-      analytic = "elk"
+    } else if (source == 'elk' || source == 'splunk') {
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
       hostName = message.substring(hostIndex, hostIndex + 20)
-      poolName = ""
-
-    } else if (source == 'splunk') {
-      analytic = "splunk"
-      message = bodyJson.message
-      var hostIndex = message.search("bigip.azure")
-      hostName = message.substring(hostIndex, hostIndex + 20)
-    
+      
     } else {
       console.log("Invalid nalytics source specified")
       response.end();
     }
 
-     //Convert hostName and poolName to arrays and derive identifiers
+     //Convert hostName to arrays and derive identifiers
      var n = hostName.split(".");
      app_id = n[2];
 
@@ -99,7 +90,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
 
     //Construct Github Action webhook payload
     const data2 = JSON.stringify({
-        event_type: "scale-azure", //+ analytic,
+        event_type: "scale-azure",
         client_payload: {
             scaling_type: what2Scale,
             app_name: app_name,
