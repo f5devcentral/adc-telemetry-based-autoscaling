@@ -157,7 +157,6 @@ cd /home/afuser && npm install request && npm install express && npm install bod
 sudo cat << EOF > /etc/systemd/system/alertforwarder.service 
 [Unit]
 Description=alertforwarder
-xx
 [Service]
 ExecStart=/usr/bin/node /home/afuser/alertforwarder.js
 Restart=always
