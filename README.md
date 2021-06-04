@@ -73,8 +73,8 @@ The AF service currently supports alerts received from the following TS consumer
 #### Splunk
 *sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu>8000 | table hostname |eval source="splunk", scaleAction="scaleOutBigip"*
 
-<img src="images/splunk.png" alt="Flowers" width="1500" >
+<img src="images/splunk.png" alt="Flowers">
 
-<img src="images/splunk1.png" alt="Flowers"  width="750">
+<img src="images/splunk1.png" alt="Flowers"  width="700">
 
-<img src="images/splunk3.png" alt="Flowers"  width="750">
+<img src="images/splunk3.png" alt="Flowers"  width="700">
