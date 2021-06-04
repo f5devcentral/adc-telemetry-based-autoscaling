@@ -66,15 +66,6 @@ The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubunt
 
 The AF service exposes a single endpoint, (*https://<AF_IPaddress>:8000*) to receive incoming webhook calls.  Refer to the deployment output for the AF endpoint address.  You will configure your analytic provider(s) to send webhooks, (*triggered via alerts*) to this address.
 
-### Analytics Providers
+## Analytics Providers
 
-The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, and **Azure Log Analytics**.  A brief overview for each of the listed vendors is available below.  For detailed guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the 'azure/ts_consumers' directory.
-
-#### Splunk
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu>8000 | table hostname |eval source="splunk", scaleAction="scaleOutBigip"*
-
-<img src="images/splunk.png" alt="Flowers">
-
-<img src="images/splunk1.png" alt="Flowers"  width="700">
-
-<img src="images/splunk3.png" alt="Flowers">
+The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, and **Azure Log Analytics**.  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the 'azure/ts_consumers' directory.
