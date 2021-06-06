@@ -70,7 +70,7 @@ The AF service exposes a single endpoint, (*https://<AF_IPaddress>:8000*) to rec
 
 ### Configuring Alerts
 
-The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, **Azure Log Analytics**, and **default**.  The AlertForwarder service will accept any provider's alert using the below default webook body.  At a minium, the message payload must inculde the BIG-IP hostname field, (*hostname*).  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
+The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, **Azure Log Analytics**, and **default**.  The AlertForwarder service will accept any provider's alert with the below default webook format.  At a minium, the message payload must inculde the BIG-IP hostname field, (*hostname*).  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
 
 **Sample default webook POST body**   
 -  Scale BIG-IP cluster
@@ -82,5 +82,9 @@ The AF service currently supports alerts received from the following TS consumer
       ```
 
 - Scale workload cluster          
-      `{"source": "default", "scaleAction":"scaleOutWorkload", "message": "{payload}"}` 
-      `{"source": "default", "scaleAction":"scaleInWorkload", "message": "{payload}"}` 
+      ```
+      {"source": "default", "scaleAction":"scaleOutWorkload", "message": "{payload}"}
+      ```
+      ``` 
+      {"source": "default", "scaleAction":"scaleInWorkload", "message": "{payload}"}
+      ```
