@@ -55,8 +55,8 @@ In addition to the above variables, the solution derives and sets two key local 
 
 1. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
 
-1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).
-
+1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).  
+  
 With the Terraform deployment completed, you should be presented with outputs similar to below.  The outputs provide the endpoints to interact with environment.  Before continuing on to the next steps, (configuring alerts) take a few minutes to familiarize yourself with the environment.
 
 <img src="images/output.png" alt="Flowers"  width="500">
@@ -64,13 +64,15 @@ With the Terraform deployment completed, you should be presented with outputs si
 
 ### The AlertForwarder service
 The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubuntu virtual machine instance as part of the application infrastructure The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow.
-
+  
 The AF service exposes a single endpoint, (*https://<AF_IPaddress>:8000*) to receive incoming webhook calls.  Refer to the deployment output for the AF endpoint address.  You will configure your analytic provider(s) to send webhooks, (*triggered via alerts*) to this address.
 
 
 ### Configuring Alerts
 
-The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, **Azure Log Analytics**, and **default**.  The AlertForwarder service will accept any provider's alert with the below default webook format.  At a minium, the message payload must inculde the BIG-IP hostname field, (*hostname*).  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
+The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, **Azure Log Analytics**, and **default**.  The AlertForwarder service will accept any provider's alert with the below default webook format.  At a minium, the message payload must inculde the BIG-IP hostname field, (*hostname*).
+
+For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
 
 
 ***Default webook POST body***   
