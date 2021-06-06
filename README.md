@@ -81,7 +81,7 @@ The AF service currently supports alerts received from the following TS consumer
       {"source": "default", "scaleAction":"scaleInBigip", "message": "{payload}"      
       ```
 
-- Scale workload cluster          
+-  Scale workload cluster          
       ```
       {"source": "default", "scaleAction":"scaleOutWorkload", "message": "{payload}"}
       ```
