@@ -14,7 +14,7 @@ locals {
 }
 
 data "template_file" "init_file" {
-  template = file("${path.module}/onboard.tpl")
+  template = file("../templates/onboard.tpl")
 
   vars = {
     admin_username = var.f5_username
@@ -32,7 +32,7 @@ data "template_file" "init_file" {
 }
 
 data "template_file" "vm01_do_json" {
-  template = file("../configs/do.json")
+  template = file("../templates/do.json")
 
   vars = {
     hostname        = local.hostname
@@ -46,7 +46,7 @@ data "template_file" "vm01_do_json" {
 
 data "template_file" "as3_json" {
   depends_on = [null_resource.azure_cli_add]
-  template = file("../configs/as3.json")
+  template = file("../templates/as3.json")
   vars = {
     web_pool        = "myapp-${var.app}"
     app_name        = var.app_name
@@ -55,7 +55,7 @@ data "template_file" "as3_json" {
 }
 
 data "template_file" "ts_json" {
-  template = file("../configs/ts_${var.ts_consumer}.json")
+  template = file("../templates/ts_${var.ts_consumer}.json")
   vars = {
     param_1 = local.params_map_1[var.ts_consumer]
     param_2 = local.params_map_2[var.ts_consumer]

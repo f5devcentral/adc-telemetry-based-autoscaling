@@ -296,7 +296,7 @@ resource "azurerm_network_interface" "external_public_nic" {
 
 data "template_file" "azure_cli_add_sh" {
   count               = length(local.bigip_map["mgmt_subnet_ids"])
-  template            = file("${path.module}/lb_associate.sh")
+  template            = file("../scripts/lb_associate.sh")
   vars = {
     rg_name         = data.azurerm_resource_group.bigiprg.name
     nic_name        = azurerm_network_interface.mgmt_nic[count.index].name
@@ -452,7 +452,7 @@ data "azurerm_public_ip" "f5vm01mgmtpip" {
 
 data "template_file" "clustermemberDO1" {
   count    = local.total_nics == 1 ? 1 : 0
-  template = file("${path.module}/onboard_do_1nic.tpl")
+  template = file("../templates/onboard_do_1nic.tpl")
   vars = {
     hostname      = local.hostname
     name_servers  = join(",", formatlist("\"%s\"", ["169.254.169.253"]))

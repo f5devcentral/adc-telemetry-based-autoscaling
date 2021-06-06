@@ -64,7 +64,7 @@ resource "azurerm_public_ip" "nlb_public_ip" {
 }
 
 data "template_file" "azure_cli_sh" {
-  template = file("../configs/azure_lb.sh")
+  template = file("../scripts/azure_lb.sh")
   depends_on = [azurerm_resource_group.rg, azurerm_public_ip.nlb_public_ip]
   vars = {
     rg_name         = azurerm_resource_group.rg.name
@@ -252,7 +252,7 @@ resource "azurerm_availability_set" "avset" {
 }
 
 data "template_file" "backendapp" {
-  template          = file("backendapp.tpl")
+  template          = file("../templates/backendapp.tpl")
   vars = {
     app_id              = local.app_id
     consul_ip           = var.consul_ip
@@ -398,7 +398,7 @@ resource "azurerm_virtual_machine" "consulvm" {
     computer_name  = "consulvm"
     admin_username = "consuluser"
     admin_password = var.upassword
-    custom_data    = file("../configs/consul.sh")
+    custom_data    = file("../scripts/consul.sh")
 
   }
 
@@ -489,7 +489,7 @@ resource "consul_keys" "app" {
 #
 
 data "template_file" "alertfwd" {
-  template          = file("../configs/alertfwd.tpl")
+  template          = file("../templates/alertfwd.tpl")
   vars = {
     github_token    = var.github_token
     repo_path       = var.repo_path
