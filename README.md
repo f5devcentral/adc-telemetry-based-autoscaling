@@ -27,6 +27,7 @@ Create the following [GitHub secrets](https://docs.github.com/en/actions/referen
 
 
 ### Terraform Variables
+
 The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
 
 - location = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
@@ -47,6 +48,7 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 - law_id          = Optional - Azure log analytics workspace ID
 - law_primarykey  = Optional - Azure log analytics workspace primary key
 
+In addition to the above variables, the solution derives and sets two key local values, (hostname & app_id). The app_id is randomly generated and unique to the deployment. The hostname is assigned to all BIG-IP instances in the cluster with a format of - "*bigip.<cloud>.<app_id>.com*"  - example: *bigip.azure.cd5e.com*
 
 ### Deploying the Solution
 1. Duplicate the repo - Since the solution relies on Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  Clone the newly created repo locally to perform the initial app infrastructure deployment.
@@ -59,24 +61,22 @@ With the Terraform deployment completed, you should be presented with outputs si
 
 <img src="images/output.png" alt="Flowers"  width="500">
 
-## Configuring Alerts
-
-### Splunk alert query example** 
-
-**BIG-IP Scaling**
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu>8000 | table hostname |eval source="splunk", scaleAction="scaleOutBigip"*
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu<3000 | table hostname |eval source="splunk", scaleAction="scaleInBigip"*
-
-**Workload Scaling**
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections>3000 | table hostname |eval source="splunk", scaleAction="scaleOutWokload"*
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections<500 | table hostname |eval source="splunk", scaleAction="scaleInWorkload"*
-
 
 ### The AlertForwarder service
 The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubuntu virtual machine instance as part of the application infrastructure The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow.
 
 The AF service exposes a single endpoint, (*https://<AF_IPaddress>:8000*) to receive incoming webhook calls.  Refer to the deployment output for the AF endpoint address.  You will configure your analytic provider(s) to send webhooks, (*triggered via alerts*) to this address.
 
-### Analytics Providers    - (*aka TS Consumers*)
 
-The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, and **Azure Log Analytics**.  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
+### Configuring Alerts
+
+The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, **Azure Log Analytics**, and **default**.  The AlertForwarder service will accept any provider's alert using the below default webook body.  At a minium, the message payload must inculde the BIG-IP hostname field, (*hostname*).  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
+
+**Sample default webook POST body**   
+-  Scale BIG-IP cluster
+      *{"source": "default", "scaleAction":"scaleOutBigip", "message": "{payload}"}* 
+      *{"source": "default", "scaleAction":"scaleInBigip", "message": "{payload}"}* 
+
+- Scale workload cluster          
+      *{"source": "default", "scaleAction":"scaleOutWorkload", "message": "{payload}"}* 
+      *{"source": "default", "scaleAction":"scaleInWorkload", "message": "{payload}"}* 
