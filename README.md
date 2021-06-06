@@ -74,8 +74,10 @@ The AF service currently supports alerts received from the following TS consumer
 
 **Sample default webook POST body**   
 -  Scale BIG-IP cluster
-      `{"source": "default", "scaleAction":"scaleOutBigip", "message": "{payload}"}`
-      `{"source": "default", "scaleAction":"scaleInBigip", "message": "{payload}"}`
+```
+      {"source": "default", "scaleAction":"scaleOutBigip", "message": "{payload}"}
+      {"source": "default", "scaleAction":"scaleInBigip", "message": "{payload}"      
+```
 
 - Scale workload cluster          
       `{"source": "default", "scaleAction":"scaleOutWorkload", "message": "{payload}"}` 
