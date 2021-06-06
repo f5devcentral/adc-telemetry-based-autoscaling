@@ -77,6 +77,6 @@ The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubunt
 
 The AF service exposes a single endpoint, (*https://<AF_IPaddress>:8000*) to receive incoming webhook calls.  Refer to the deployment output for the AF endpoint address.  You will configure your analytic provider(s) to send webhooks, (*triggered via alerts*) to this address.
 
-### Analytics Providers    *aka TS Consumers*
+### Analytics Providers    - (*aka TS Consumers*)
 
 The AF service currently supports alerts received from the following TS consumers: **Splunk**, **Elastic Watcher/Kibana**, and **Azure Log Analytics**.  For guidance on configuring sample alerts refer to the relevant consumer (*"vendor"*) folder located in the *'ts_consumers'* directory.
