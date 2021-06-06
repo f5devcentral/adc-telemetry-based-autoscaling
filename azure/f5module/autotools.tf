@@ -35,7 +35,7 @@ data "template_file" "vm01_do_json" {
   template = file("../templates/do.json")
 
   vars = {
-    hostname        = local.hostname
+    hostname           = local.hostname
     local_selfip       = "-external-self-address-"
     gateway            = var.ext_gw
     dns_server         = var.dns_server

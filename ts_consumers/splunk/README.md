@@ -33,7 +33,7 @@ To receive incoming telemetry data into my Splunk Enterprise  environment over H
 **Create Splunk Alerts**
 --------------------------------------
 
-### Splunk alert query example
+### Splunk alert query examples
 
 **BIG-IP Scaling**
 ```
