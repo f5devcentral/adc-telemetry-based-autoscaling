@@ -61,6 +61,17 @@ With the Terraform deployment completed, you should be presented with outputs si
 
 ## Configuring Alerts
 
+### Splunk alert query example** 
+
+**BIG-IP Scaling**
+*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu>8000 | table hostname |eval source="splunk", scaleAction="scaleOutBigip"*
+*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu<3000 | table hostname |eval source="splunk", scaleAction="scaleInBigip"*
+
+**Workload Scaling**
+*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections>3000 | table hostname |eval source="splunk", scaleAction="scaleOutWokload"*
+*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections<500 | table hostname |eval source="splunk", scaleAction="scaleInWorkload"*
+
+
 ### The AlertForwarder service
 The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubuntu virtual machine instance as part of the application infrastructure The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow.
 
