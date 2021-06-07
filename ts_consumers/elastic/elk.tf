@@ -66,7 +66,7 @@ resource "azurerm_virtual_machine" "elkvm" {
     computer_name  = "elkvm"
     admin_username = "elkuser"
     admin_password = var.upassword
-    custom_data    = file("elk.sh")
+    custom_data    = file("../scripts/elk.sh")
 
   }
 
