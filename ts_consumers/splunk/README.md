@@ -51,8 +51,8 @@ sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnectio
 sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections<500 | table hostname |eval source="splunk", scaleAction="scaleInWorkload"
 ```
 
-<img src="images/splunk.png" alt="Flowers">
+<img src="../images/splunk.png" alt="Flowers">
 
-<img src="images/splunk1.png" alt="Flowers"  width="700">
+<img src="../images/splunk1.png" alt="Flowers"  width="700">
 
-<img src="images/splunk3.png" alt="Flowers">
+<img src="../images/splunk3.png" alt="Flowers">
