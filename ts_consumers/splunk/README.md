@@ -37,18 +37,18 @@ To receive incoming telemetry data into my Splunk Enterprise  environment over H
 
 **BIG-IP Scaling**
 ```
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu>8000 | table hostname |eval source="splunk", scaleAction="scaleOutBigip"*
+sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu>8000 | table hostname |eval source="splunk", scaleAction="scaleOutBigip"
 ```
 ```
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu<3000 | table hostname |eval source="splunk", scaleAction="scaleInBigip"*
+sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxCpu<3000 | table hostname |eval source="splunk", scaleAction="scaleInBigip"
 ```
 
 **Workload Scaling**
 ```
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections>3000 | table hostname |eval source="splunk", scaleAction="scaleOutWokload"*
+sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections>3000 | table hostname |eval source="splunk", scaleAction="scaleOutWokload"
 ```
 ```
-*sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections<500 | table hostname |eval source="splunk", scaleAction="scaleInWorkload"*
+sourcetype="f5:telemetry:json" telemetryEventCategory=AVR MaxConcurrentConnections<500 | table hostname |eval source="splunk", scaleAction="scaleInWorkload"
 ```
 
 <img src="images/splunk.png" alt="Flowers">
