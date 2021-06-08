@@ -63,22 +63,53 @@ resource "azurerm_public_ip" "nlb_public_ip" {
   zones               = [1]
 }
 
-data "template_file" "azure_cli_sh" {
-  template = file("../scripts/azure_lb.sh")
-  depends_on = [azurerm_resource_group.rg, azurerm_public_ip.nlb_public_ip]
-  vars = {
-    rg_name         = azurerm_resource_group.rg.name
-    public_ip       = azurerm_public_ip.nlb_public_ip.name
-    lb_name         = format("application-%s-loadbalancer", local.app_id)         
+resource "azurerm_lb" "nlb" {
+  name                = format("application-%s-loadbalancer", local.app_id)  
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku                 = "Standard"
+
+  frontend_ip_configuration {
+    name                 = "PublicIPAddress"
+    public_ip_address_id = azurerm_public_ip.nlb_public_ip.id
   }
 }
 
-resource "null_resource" "azure-cli" {
-  
-  provisioner "local-exec" {
-    # Call Azure CLI Script here
-    command = data.template_file.azure_cli_sh.rendered
-  }
+resource "azurerm_lb_backend_address_pool" "f5BackendPool" {
+  loadbalancer_id = azurerm_lb.nlb.id
+  resource_group_name = azurerm_resource_group.rg.name
+  name            = "f5BackendPool"
+}
+
+resource "azurerm_lb_rule" "nlbrule1" {
+  resource_group_name            = azurerm_resource_group.rg.name
+  loadbalancer_id                = azurerm_lb.nlb.id
+  name                           = "NLBRule1"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = 80
+  frontend_ip_configuration_name = "PublicIPAddress"
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.f5BackendPool.id
+  probe_id                       = azurerm_lb_probe.lb_probe.id
+}
+
+resource "azurerm_lb_rule" "nlbrule2" {
+  resource_group_name            = azurerm_resource_group.rg.name
+  loadbalancer_id                = azurerm_lb.nlb.id
+  name                           = "NLBRule2"
+  protocol                       = "Tcp"
+  frontend_port                  = 443
+  backend_port                   = 443
+  frontend_ip_configuration_name = "PublicIPAddress"  
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.f5BackendPool.id
+  probe_id                       = azurerm_lb_probe.lb_probe.id
+}
+
+resource "azurerm_lb_probe" "lb_probe" {
+  resource_group_name = azurerm_resource_group.rg.name
+  loadbalancer_id     = azurerm_lb.nlb.id
+  name                = "tcp-443-running-probe"
+  port                = 443
 }
 
 #
