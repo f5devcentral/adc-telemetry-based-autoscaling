@@ -45,7 +45,7 @@ data "template_file" "vm01_do_json" {
 }
 
 data "template_file" "as3_json" {
-  depends_on = [null_resource.azure_cli_add]
+  depends_on = [azurerm_network_interface_backend_address_pool_association.backend_assoc]
   template = file("../templates/as3.json")
   vars = {
     web_pool        = "myapp-${var.app}"

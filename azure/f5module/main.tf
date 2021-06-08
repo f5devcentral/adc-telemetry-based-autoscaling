@@ -223,6 +223,17 @@ resource "azurerm_public_ip" "mgmt_public_ip" {
   }
 }
 
+#
+# Associate interface with load balancer
+#
+
+resource "azurerm_network_interface_backend_address_pool_association" "backend_assoc" {
+  count                   = length(local.bigip_map["mgmt_subnet_ids"])
+  network_interface_id    = azurerm_network_interface.mgmt_nic[count.index].id
+  ip_configuration_name   = "${local.instance_prefix}-mgmt-ip-${count.index}"
+  backend_address_pool_id = var.backend_pool_id
+}
+
 # Deploy BIG-IP with N-Nic interface 
 resource "azurerm_network_interface" "mgmt_nic" {
   count               = length(local.bigip_map["mgmt_subnet_ids"])
@@ -287,34 +298,6 @@ resource "azurerm_network_interface" "external_public_nic" {
   tags = {
     Name   = "${local.instance_prefix}-ext-public-nic-${count.index}"
     source = "terraform"
-  }
-}
-
-#
-# Associate interface with load balancer
-#
-
-data "template_file" "azure_cli_add_sh" {
-  count               = length(local.bigip_map["mgmt_subnet_ids"])
-  template            = file("../scripts/lb_associate.sh")
-  vars = {
-    rg_name         = data.azurerm_resource_group.bigiprg.name
-    nic_name        = azurerm_network_interface.mgmt_nic[count.index].name
-    ip_config       = "${local.instance_prefix}-mgmt-ip-${count.index}"
-    lb_name         = format("application-%s-loadbalancer", var.app_id)   
-    app_id          = var.app_id
-    instance_id     = local.instance_prefix
-    app_name        = var.app_name
-  }
-}
-
-resource "null_resource" "azure_cli_add" {
-  count               = length(local.bigip_map["mgmt_subnet_ids"])
-  depends_on          = [data.template_file.azure_cli_add_sh]  
-  
-  provisioner "local-exec" {
-    # Call Azure CLI Script here
-    command = element(data.template_file.azure_cli_add_sh.*.rendered,0)
   }
 }
 

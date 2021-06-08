@@ -32,6 +32,11 @@ variable consul_ip {
   type        = string
 }
 
+variable backend_pool_id {
+  type        = string
+}
+
+
 variable f5_username {
   description = "The admin username of the F5 Bigip that will be deployed"
   default     = "bigipuser"
