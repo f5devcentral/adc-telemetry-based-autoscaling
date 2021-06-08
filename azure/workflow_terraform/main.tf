@@ -138,7 +138,6 @@ module bigip {
     consul = consul
   }
 
-  depends_on                 = [null_resource.azure-cli]
 }
 
 resource "null_resource" "clusterDO" {

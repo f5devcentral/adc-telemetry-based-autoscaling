@@ -142,8 +142,6 @@ module bigip {
     consul = consul
   }
 
-  # depends_on                 = azurerm_lb.nlb
-
 }
 
 resource "null_resource" "clusterDO" {
