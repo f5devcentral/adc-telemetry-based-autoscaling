@@ -1,5 +1,3 @@
-# Deploy ELK Stack instance
-
 terraform {
   required_providers {
     github = {
