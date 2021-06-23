@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo apt update && curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash - && sudo apt-get -y install nodejs
-sudo cat << EOF > /home/afuser/alertforwarder.js
+sudo cat << EOF > /home/ubuntu/alertforwarder.js
 
 const express = require( 'express' );
 const app = express();
@@ -52,9 +52,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
           hostLength = 18
         }  
       hostName = vals.substring(hostIndex, hostIndex + hostLength)
-    }
-      
-      
+
     } else if (source == 'elk' || source == 'splunk' || source == 'default') {
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
@@ -167,7 +165,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
   console.log("Starting alert processor...\n");
   }).listen(8000); 
 EOF
-cd /home/afuser && npm install request && npm install express && npm install body-parser && npm install http && npm install fs && npm install https && sudo chmod +x /home/afuser/alertforwarder.js
+cd /home/ubuntu && npm install request && npm install express && npm install body-parser && npm install http && npm install fs && npm install https && sudo chmod +x /home/afuser/alertforwarder.js
 
 sudo cat << EOF > /etc/systemd/system/alertforwarder.service 
 [Unit]

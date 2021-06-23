@@ -542,7 +542,7 @@ resource "azurerm_virtual_machine" "afvm" {
 
   os_profile {
     computer_name  = "afvm"
-    admin_username = "afuser"
+    admin_username = "ubuntu"
     admin_password = var.upassword
     custom_data    = data.template_file.alertfwd.rendered
   }
