@@ -165,20 +165,20 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
   console.log("Starting alert processor...\n");
   }).listen(8000); 
 EOF
-cd /home/ubuntu && npm install request && npm install express && npm install body-parser && npm install http && npm install fs && npm install https && sudo chmod +x /home/afuser/alertforwarder.js
+cd /home/ubuntu && npm install request && npm install express && npm install body-parser && npm install http && npm install fs && npm install https && sudo chmod +x /home/ubuntu/alertforwarder.js
 
 sudo cat << EOF > /etc/systemd/system/alertforwarder.service 
 [Unit]
 Description=alertforwarder
 [Service]
-ExecStart=/usr/bin/node /home/afuser/alertforwarder.js
+ExecStart=/usr/bin/node /home/ubuntu/alertforwarder.js
 Restart=always
 User=nobody
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=nogroup
-Environment=PATH=/usr/bin:/usr/local/bin:/home/afuser
+Environment=PATH=/usr/bin:/usr/local/bin:/home/ubuntu
 Environment=NODE_ENV=production
-WorkingDirectory=/home/afuser
+WorkingDirectory=/home/ubuntu
 
 [Install]
 WantedBy=multi-user.target
