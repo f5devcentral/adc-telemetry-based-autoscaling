@@ -94,7 +94,7 @@ jobs:
       - name: get consul server parameters
         id: consul_params
         run: |
-          echo ::set-output name=consul_server::$(cat azure/configs/consul_server.cfg)
+          echo ::set-output name=consul_server::$(cat configs/consul_server.cfg)
       
       - name: check if another running already
         id: get_is_running
