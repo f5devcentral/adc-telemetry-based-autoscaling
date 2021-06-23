@@ -435,7 +435,7 @@ data "azurerm_public_ip" "f5vm01mgmtpip" {
 
 data "template_file" "clustermemberDO1" {
   count    = local.total_nics == 1 ? 1 : 0
-  template = file("../templates/onboard_do_1nic.tpl")
+  template = file("../../templates/onboard_do_1nic.tpl")
   vars = {
     hostname      = local.hostname
     name_servers  = join(",", formatlist("\"%s\"", ["169.254.169.253"]))

@@ -40,17 +40,31 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
      if (scaleAction == null){
         console.log("error with scaleaction");
         response.end();
-      };
+     };
 
-     if (source == "azurelaw"){
-      vals = bodyJson.SearchResults.tables[0].rows[0].toString();
-      var hostIndex = vals.search("bigip.azure")
-      hostName = vals.substring(hostIndex, hostIndex + 20)
+    if (source == "azurelaw"){
+        vals = bodyJson.SearchResults.tables[0].rows[0].toString();  
+        var hostIndex = vals.search("bigip.azure")
+        var hostLength = 20
 
+        if ( hostIndex === "") {
+          hostIndex = vals.search("bigip.aws")
+          hostLength = 18
+        }  
+      hostName = vals.substring(hostIndex, hostIndex + hostLength)
+    }
+      
+      
     } else if (source == 'elk' || source == 'splunk' || source == 'default') {
       message = bodyJson.message
       var hostIndex = message.search("bigip.azure")
-      hostName = message.substring(hostIndex, hostIndex + 20)
+      var hostLength = 20
+
+      if ( hostIndex === "") {
+          hostIndex = message.search("bigip.aws")
+          hostlength = 18
+      }  
+      hostName = message.substring(hostIndex, hostIndex + hostLength)
       
     } else {
       console.log("Invalid nalytics source specified")
@@ -59,6 +73,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
 
      //Convert hostName to arrays and derive identifiers
      var n = hostName.split(".");
+     cloud = n[1];
      app_id = n[2];
 
      //Create scaling eventtype
@@ -90,7 +105,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
 
     //Construct Github Action webhook payload
     const data2 = JSON.stringify({
-        event_type: "scale-azure",
+        event_type: "scale-" + cloud,
         client_payload: {
             scaling_type: what2Scale,
             app_name: app_name,

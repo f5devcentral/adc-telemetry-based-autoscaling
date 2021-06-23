@@ -16,7 +16,7 @@ provider "github" {
 resource "github_repository_file" "adpm" {
   repository          = "adc-telemetry-based-autoscaling"
   branch              = "main"
-  file                = "azure/configs/consul_server.cfg"
+  file                = "configs/consul_server.cfg"
   content             = format("http://%s:8500", azurerm_public_ip.consul_public_ip.ip_address)
   commit_message      = format("file contents update by application ID: %s", local.app_id)
   overwrite_on_create = true
@@ -283,7 +283,7 @@ resource "azurerm_availability_set" "avset" {
 }
 
 data "template_file" "backendapp" {
-  template          = file("../templates/backendapp.tpl")
+  template          = file("../../templates/backendapp.tpl")
   vars = {
     app_id              = local.app_id
     consul_ip           = var.consul_ip
@@ -429,7 +429,7 @@ resource "azurerm_virtual_machine" "consulvm" {
     computer_name  = "consulvm"
     admin_username = "consuluser"
     admin_password = var.upassword
-    custom_data    = file("../scripts/consul.sh")
+    custom_data    = file("../../scripts/consul.sh")
 
   }
 
@@ -520,7 +520,7 @@ resource "consul_keys" "app" {
 #
 
 data "template_file" "alertfwd" {
-  template          = file("../templates/alertfwd.tpl")
+  template          = file("../../templates/alertfwd.tpl")
   vars = {
     github_token    = var.github_token
     repo_path       = var.repo_path

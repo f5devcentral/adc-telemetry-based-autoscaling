@@ -34,7 +34,7 @@ resource "azurerm_availability_set" "avset" {
 }
 
 data "template_file" "backendapp" {
-  template          = file("../templates/backendapp.tpl")
+  template          = file("../../templates/backendapp.tpl")
   vars = {
     app_id              = local.app_id
     consul_ip           = var.consul_ip

@@ -1,5 +1,5 @@
 data "template_file" "backend_file" {
-  template = file("../templates/backend.tpl")
+  template = file("../../templates/backend.tpl")
   vars = {
     app_id  = var.app_id
     bigip_count = var.bigip_count
