@@ -52,7 +52,7 @@
 				},
 				"My_ASM_Policy": {
 					"class": "WAF_Policy",
-					"url": "https://raw.githubusercontent.com/f5devcentral/adc-telemetry-based-autoscaling/main/azure/configs/app_sec_policy.xml",
+					"url": "https://raw.githubusercontent.com/f5devcentral/adc-telemetry-based-autoscaling/main/configs/app_sec_policy.xml",
 					"ignoreChanges": true
 				},
 				"${web_pool}": {
