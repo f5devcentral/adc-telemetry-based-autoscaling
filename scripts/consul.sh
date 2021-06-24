@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Utils
-sudo apt-get install unzip
+sudo apt-get update && sudo apt-get install unzip
 
 #Download Consul
 CONSUL_VERSION="1.9.0"
