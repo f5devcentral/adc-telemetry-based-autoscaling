@@ -62,12 +62,6 @@ variable app_name {
   default = "sample_app"
 }
 
-variable consul_ip {
-  type        = string
-  description = "private address assigned to consul server"
-  default     = "10.2.1.100"
-}
-
 variable github_token {
   type        = string
   description = "repo token required to update secrets"
@@ -88,7 +82,7 @@ variable repo_path {
 variable ubuntu_ami_search_name {
   description = "Ubuntu AMI name to search for"
   type        = string
-  default     = "*ubuntu-focal-20.04-amd64-server-*"
+  default     = "*ubuntu-bionic-18.04-amd64-server-*"
 }
 
 variable "ec2_key_name" {
@@ -117,3 +111,11 @@ variable availabilityZones {
   default     = ["us-east-1a", "us-east-1b"]
 }
 variable AllowedIPs {}
+
+# TAGS
+variable "purpose" { default = "public" }
+variable "environment" { default = "f5env" } #ex. dev/staging/prod
+variable "owner" { default = "f5owner" }
+variable "group" { default = "f5group" }
+variable "costcenter" { default = "f5costcenter" }
+variable "application" { default = "f5app" }

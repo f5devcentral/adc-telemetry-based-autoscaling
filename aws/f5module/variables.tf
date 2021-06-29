@@ -1,3 +1,60 @@
+variable app_name {
+  type    = string
+  default = ""
+}
+
+variable app_id {
+  type    = string
+  default = ""
+}
+
+variable hostname {
+  type    = string
+  default = ""
+}
+
+variable "ext_gw" { default = "10.0.0.1"}
+
+variable azure_region {
+  type    = string
+  default = ""
+}
+
+variable "dns_server" { default = "8.8.8.8" }
+variable "ntp_server" { default = "0.us.pool.ntp.org" }
+variable "timezone" { default = "UTC" }
+
+variable "app" {default = "app1" }
+
+variable splunkIP {
+  type = string
+}    
+
+variable splunkHEC {
+  type = string
+}     
+
+variable logStashIP {
+  type = string
+}
+
+variable law_id {
+  type = string
+}         
+
+variable law_primarykey {
+  type = string
+}  
+
+variable ts_consumer {
+  type    = number
+}
+
+variable consul_ip {
+  description = "consul server IP address"
+  type        = string
+}
+
 variable prefix {
   description = "Prefix for resources created by this module"
   type        = string

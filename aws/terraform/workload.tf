@@ -13,7 +13,7 @@ data "aws_ami" "ubuntu" {
         name   = "virtualization-type"
         values = ["hvm"]
   }
-  owners = ["099720109477"] # Canonical
+  owners = ["679593333241"] # Canonical
 }
 
 variable ec2_key_name2 {
@@ -53,18 +53,19 @@ resource "aws_instance" "consulvm" {
   iam_instance_profile = var.aws_iam_instance_profile
   user_data            = file("../../scripts/consul.sh")
   provisioner "local-exec" {
+    #command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.consulvm.id} --region ${var.region}"
     command = "sleep 300"
   }
  
   tags = {
     "Owner"               = "Canonical"
-    "Name"                = "consul-vm"
+    "Name"                = "${local.app_id}-consul-vm"
     "KeepInstanceRunning" = "false"
   }
 }
 
 #
-# Update consul server
+# Update consul server'
 #
 
 provider "consul" {
@@ -197,7 +198,54 @@ resource "aws_instance" "alertforwardervm" {
  
   tags = {
     "Owner"               = "Canonical"
-    "Name"                = "alertForwarder-vm"
+    "Name"                = "${local.app_id}-alertForwarder-vm"
     "KeepInstanceRunning" = "false"
+  }
+}
+
+#
+# Deploy Workloads
+#
+
+data "template_file" "backendapp" {
+  template          = file("../../templates/backendapp_aws.tpl")
+  vars = {
+    app_id              = local.app_id
+    consul_ip           = aws_instance.consulvm.private_ip
+  }
+}
+
+resource "aws_instance" "backendapp" {
+  count                       = var.workload_count
+  ami                         = data.aws_ami.ubuntu.id
+  #availability_zone          = "${var.region}${var.aws_region_az}"
+  instance_type               = "t2.medium"
+  associate_public_ip_address = true
+  vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
+  subnet_id                   = aws_subnet.mgmt.id
+  key_name                    = var.ec2_key_name2 == "~/.ssh/id_rsa.pub" ? aws_key_pair.instance_key.key_name : var.ec2_key_name2
+ 
+  root_block_device {
+    delete_on_termination = true
+  }
+
+  iam_instance_profile = var.aws_iam_instance_profile
+  user_data            = data.template_file.backendapp.rendered
+  provisioner "local-exec" {
+    command = "sleep 300"
+  }
+ 
+  tags = {
+    Name                = "${local.app_id}-backendapp-${count.index}"
+    environment         = var.environment
+    owner               = var.owner
+    group               = var.group
+    costcenter          = var.costcenter
+    application         = var.application
+    tag_name            = "Env"
+    value               = "consul"
+    propagate_at_launch = true
+    key                 = "Env"
+    value               = "consul"
   }
 }

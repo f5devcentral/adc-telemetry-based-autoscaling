@@ -16,9 +16,6 @@ output "d_consul_public_address" {
    value = "http://${aws_instance.consulvm.public_ip}:8500"
  }
 
-output "d2_consul_public_address" {
-   value = "http://${aws_instance.consulvm.private_ip}:8500"
- }
 output "e_alertForwarder_public_address" {
    value = "https://${aws_instance.alertforwardervm.public_ip}:8000"
 }

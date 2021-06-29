@@ -169,7 +169,7 @@ module "mgmt-network-security-group" {
   vpc_id      = module.vpc.vpc_id
 
   ingress_cidr_blocks = var.AllowedIPs
-  ingress_rules       = ["https-443-tcp", "https-8443-tcp", "ssh-tcp", "consul-webui-tcp", "splunk-web-tcp"]
+  ingress_rules       = ["https-443-tcp", "https-8443-tcp", "ssh-tcp", "consul-webui-tcp", "splunk-web-tcp", "consul-serf-lan-tcp", "consul-serf-lan-udp"]
 
   # Allow ec2 instances outbound Internet connectivity
   egress_cidr_blocks = ["0.0.0.0/0"]
@@ -198,6 +198,16 @@ module bigip {
   f5_password = random_string.password.result
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" = "" }]
   mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
+  app_name                  = var.app_name
+  consul_ip                 = aws_instance.consulvm.private_ip
+  hostname                  = local.hostname
+  app_id                    = local.app_id
+  splunkIP                  = var.splunkIP
+  splunkHEC                 = var.splunkHEC
+  logStashIP                = var.logStashIP
+  law_id                    = var.law_id
+  law_primarykey            = var.law_primarykey
+  ts_consumer               = var.ts_consumer
 }
 
 resource "null_resource" "clusterDO" {
