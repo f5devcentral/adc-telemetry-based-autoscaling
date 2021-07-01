@@ -2,7 +2,7 @@ resource "aws_eip" "nlb_pip" {
 }
 
 resource "aws_lb" "nlb" {
-  name               = format("%s-nlb-%s", var.prefix, local.app_id)
+  name               = format("%s-nlb", local.app_id)
   internal           = false
   load_balancer_type = "network"
   enable_deletion_protection = false
@@ -14,7 +14,7 @@ resource "aws_lb" "nlb" {
 }
 
 resource "aws_lb_target_group" "nlb_tg" {
-  name     = format("%s-tg-%s", var.prefix, local.app_id)
+  name     = format("%s-tg", local.app_id)
   port     = 443
   protocol = "TCP"
   vpc_id   = module.vpc.vpc_id
