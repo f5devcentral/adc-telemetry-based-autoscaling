@@ -91,12 +91,6 @@ variable "ec2_key_name" {
   default     = "tf-demo-key"
 }
 
-variable "prefix" {
-  description = "Prefix for resources created by this module"
-  type        = string
-  default     = "tf-aws-bigip"
-}
-
 variable region {}
 
 variable cidr {

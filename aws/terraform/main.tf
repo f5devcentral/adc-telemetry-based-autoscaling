@@ -29,7 +29,7 @@ resource random_string password {
 }
 
 resource "aws_iam_role" "main" {
-  name               = format("%s-iam-role-%s", var.prefix, local.app_id)
+  name               = format("%s-iam-role", local.app_id)
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -94,7 +94,7 @@ EOF
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = format("%s-iam-profile-%s", var.prefix, local.app_id)
+  name = format("%s-iam-profile", local.app_id)
   role = aws_iam_role.main.id
 }
 
@@ -102,7 +102,7 @@ resource "aws_iam_instance_profile" "instance_profile" {
 # Create Secret Store and Store BIG-IP Password
 #
 resource "aws_secretsmanager_secret" "bigip" {
-  name = format("%s-bigip-secret-%s", var.prefix, local.app_id)
+  name = format("%s-bigip-secret", local.app_id)
 }
 
 resource "aws_secretsmanager_secret_version" "bigip-pwd" {
@@ -116,7 +116,7 @@ resource "aws_secretsmanager_secret_version" "bigip-pwd" {
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name                 = format("%s-vpc-%s", var.prefix, local.app_id)
+  name                 = format("%s-vpc", local.app_id)
   cidr                 = var.cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -124,7 +124,7 @@ module "vpc" {
   azs = var.availabilityZones
 
   tags = {
-    Name        = format("%s-vpc-%s", var.prefix, local.app_id)
+    Name        = format("%s-vpc", local.app_id)
     Terraform   = "true"
     Environment = "dev"
   }
@@ -158,18 +158,19 @@ resource "aws_route_table_association" "route_table_mgmt" {
   subnet_id      = aws_subnet.mgmt.id
   route_table_id = aws_route_table.internet-gw.id
 }
+
 #
-# Create a security group for BIG-IP Management
+# Create a security group for Environment
 #
 module "mgmt-network-security-group" {
   source = "terraform-aws-modules/security-group/aws"
 
-  name        = format("%s-mgmt-nsg-%s", var.prefix, local.app_id)
+  name        = format("%s-mgmt-nsg", local.app_id)
   description = "Security group for BIG-IP Management"
   vpc_id      = module.vpc.vpc_id
 
   ingress_cidr_blocks = var.AllowedIPs
-  ingress_rules       = ["https-443-tcp", "https-8443-tcp", "ssh-tcp", "consul-webui-tcp", "splunk-web-tcp", "consul-serf-lan-tcp", "consul-serf-lan-udp"]
+  ingress_rules       = ["http-80-tcp","https-443-tcp", "https-8443-tcp", "ssh-tcp", "consul-tcp", "consul-webui-tcp", "splunk-web-tcp", "consul-serf-lan-tcp", "consul-serf-lan-udp"]
 
   # Allow ec2 instances outbound Internet connectivity
   egress_cidr_blocks = ["0.0.0.0/0"]
@@ -183,7 +184,7 @@ resource "tls_private_key" "example" {
 }
 
 resource "aws_key_pair" "generated_key" {
-  key_name   = format("%s-%s-%s", var.prefix, var.ec2_key_name, local.app_id)
+  key_name   = format("%s-%s", local.app_id, var.ec2_key_name)
   public_key = tls_private_key.example.public_key_openssh
 }
 
@@ -194,20 +195,25 @@ resource "aws_key_pair" "generated_key" {
 module bigip {
   source = "../f5module/"
   count  = var.bigip_count
-  prefix = format("%s-1nic", var.prefix)
-  f5_password = random_string.password.result
+  prefix = format("%s", local.app_id)
+  f5_password = "F5testnet!"
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" = "" }]
   mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
   app_name                  = var.app_name
   consul_ip                 = aws_instance.consulvm.private_ip
   hostname                  = local.hostname
   app_id                    = local.app_id
+  tg_arn                    = aws_lb_target_group.nlb_tg.arn
   splunkIP                  = var.splunkIP
   splunkHEC                 = var.splunkHEC
   logStashIP                = var.logStashIP
   law_id                    = var.law_id
   law_primarykey            = var.law_primarykey
   ts_consumer               = var.ts_consumer
+
+  providers = {
+    consul = consul
+  }
 }
 
 resource "null_resource" "clusterDO" {

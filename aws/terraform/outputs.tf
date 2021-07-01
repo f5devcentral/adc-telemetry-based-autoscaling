@@ -7,10 +7,10 @@ output "b_bigip_management_address" {
     value = module.bigip[*].mgmtPublicIP
 }
 
-#output "c_application_address" {
-#  description = "Public endpoint for load balancing external app"
-#  value       = "https://${azurerm_public_ip.nlb_public_ip.ip_address}"
-#}
+output "c_application_address" {
+  description = "Public endpoint for load balancing external app"
+  value       = "https://${aws_eip.nlb_pip.public_ip}"
+}
 
 output "d_consul_public_address" {
    value = "http://${aws_instance.consulvm.public_ip}:8500"

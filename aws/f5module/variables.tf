@@ -13,6 +13,10 @@ variable hostname {
   default = ""
 }
 
+variable tg_arn {
+  type    = string
+  default = ""
+}
 variable "ext_gw" { default = "10.0.0.1"}
 
 variable azure_region {
@@ -58,7 +62,6 @@ variable consul_ip {
 variable prefix {
   description = "Prefix for resources created by this module"
   type        = string
-  //default     = "tf-aws-bigip"
 }
 
 variable f5_username {
@@ -68,7 +71,7 @@ variable f5_username {
 
 variable f5_password {
   description = "Password of the F5 Bigip that will be deployed"
-  default     = ""
+  default     = "F5testnet!"
 }
 
 variable f5_ami_search_name {

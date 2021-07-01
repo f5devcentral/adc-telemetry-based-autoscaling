@@ -27,6 +27,7 @@ locals {
     "external_securitygroup_ids" = var.external_securitygroup_ids
     "internal_subnet_ids"        = var.internal_subnet_ids
     "internal_securitygroup_ids" = var.internal_securitygroup_ids
+    instance_prefix = format("%s-%s", var.app_id, random_id.module_id.hex)
   }
   mgmt_public_subnet_id = [
     for subnet in local.bigip_map["mgmt_subnet_ids"] :
@@ -370,6 +371,13 @@ data "template_file" "user_data_vm0" {
     CFE_VER                = split("/", var.CFE_URL)[7]
     CFE_URL                = var.CFE_URL,
     FAST_URL               = var.FAST_URL
+    hostname               = var.hostname
+    timezone               = var.timezone
+    web_pool               = "myapp-${var.app}"
+    app_name               = var.app_name
+    consul_ip              = var.consul_ip
+    param_1                = var.splunkIP
+    param_2                = var.splunkHEC
   }
 }
 
@@ -384,8 +392,17 @@ resource "aws_key_pair" "instane_key" {
   public_key = file("~/.ssh/id_rsa.pub")
 }
 
+#
 # Deploy BIG-IP
 #
+
+resource "aws_lb_target_group_attachment" "tg_attach" {
+  count            = var.f5_instance_count
+  target_group_arn = var.tg_arn
+  target_id        = aws_instance.f5_bigip[count.index].id
+  port             = 443
+}
+
 resource "aws_instance" "f5_bigip" {
   # determine the number of BIG-IPs to deploy
   count         = var.f5_instance_count
@@ -437,13 +454,15 @@ resource "aws_instance" "f5_bigip" {
     }
   }
   iam_instance_profile = var.aws_iam_instance_profile
-  user_data            = data.template_file.user_data_vm0.rendered
+  user_data            = data.template_file.user_data_vm0.rendered  
+
   provisioner "local-exec" {
     //  command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.f5_bigip[count.index].id} --region ap-south-1"
     command = "sleep 300"
   }
+
   tags = {
-    Name = format("%s-%d", local.instance_prefix, count.index)
+    Name = "${local.instance_prefix}-f5vm"
   }
   depends_on = [aws_eip.mgmt, aws_network_interface.public, aws_network_interface.private, null_resource.delay]
 }
