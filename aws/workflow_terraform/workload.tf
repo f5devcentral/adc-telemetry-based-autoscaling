@@ -12,7 +12,7 @@ data "template_file" "backendapp" {
 }
 
 resource "aws_instance" "backendapp" {
-  count                       = var.workload_count
+  count                       = local.workload_count
   ami                         = data.aws_ami.ubuntu.id
   #availability_zone          = "${var.region}${var.aws_region_az}"
   instance_type               = "t2.medium"

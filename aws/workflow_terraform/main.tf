@@ -209,7 +209,7 @@ resource "aws_key_pair" "generated_key" {
 
 module bigip {
   source = "../f5module/"
-  count  = var.bigip_count
+  count  = local.bigip_count
   prefix = format("%s", local.app_id)
   f5_password = "F5testnet!"
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" = "" }]
@@ -232,7 +232,7 @@ module bigip {
 }
 
 resource "null_resource" "clusterDO" {
-  count = var.bigip_count
+  count = local.bigip_count
   provisioner "local-exec" {
     command = "cat > DO_1nic.json <<EOL\n ${module.bigip[count.index].onboard_do}\nEOL"
   }
@@ -392,7 +392,7 @@ resource "consul_keys" "app" {
   }
   key {
     path  = format("adpm/applications/%s/scaling/bigip/current_count", local.app_id)
-    value = var.bigip_count
+    value = local.bigip_count
   }
   key {
     path  = format("adpm/applications/%s/scaling/workload/current_count", local.app_id)
