@@ -7,7 +7,6 @@ locals {
   allowed_app_cidr  = "0.0.0.0/0"
   hostname          = format("bigip.aws.%s.com", local.app_id)
   event_timestamp   = formatdate("YYYY-MM-DD hh:mm:ss",timestamp())
-  app_id            = random_id.id.hex
 }
 
 # Configure the GitHub Provider
