@@ -23,16 +23,6 @@ variable ts_consumer {
   type    = number
 }
 
-variable bigip_count {
-  description = "Number of Bigip instances to create( From terraform 0.13, module supports count feature to spin mutliple instances )"
-  type        = number
-}
-
-variable workload_count {
-  description = "Number of backend application instances to create( From terraform 0.13, module supports count feature to spin mutliple instances )"
-  type        = number
-}
-
 variable bigip_min {
   type    = number
   default = 1
