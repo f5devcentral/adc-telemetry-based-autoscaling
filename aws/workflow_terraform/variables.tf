@@ -81,8 +81,6 @@ variable "ec2_key_name" {
   default     = "tf-demo-key"
 }
 
-variable region {}
-
 variable cidr {
   description = "aws VPC CIDR"
   type        = string
