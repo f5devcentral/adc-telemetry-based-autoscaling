@@ -47,7 +47,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
         var hostIndex = vals.search("bigip.azure")
         var hostLength = 20
 
-        if ( hostIndex === "") {
+        if ( hostIndex == -1) {
           hostIndex = vals.search("bigip.aws")
           hostLength = 18
         }  
@@ -58,7 +58,7 @@ const repoPath  = '${repo_path}'  //Modify to match designated github action rep
       var hostIndex = message.search("bigip.azure")
       var hostLength = 20
 
-      if ( hostIndex === "") {
+      if ( hostIndex == -1) {
           hostIndex = message.search("bigip.aws")
           hostlength = 18
       }  
