@@ -20,7 +20,7 @@ resource "github_repository_file" "adpm" {
   repository          = "adc-telemetry-based-autoscaling"
   branch              = "main"
   file                = "aws/consul_server.cfg"
-  content             = format("http://%s:8500", azurerm_public_ip.consul_public_ip.ip_address)
+  content             = format("http://%s:8500", aws_instance.consulvm.public_ip)
   commit_message      = format("file contents update by application ID: %s", local.app_id)
   overwrite_on_create = true
 }

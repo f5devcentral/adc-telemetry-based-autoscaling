@@ -404,6 +404,7 @@ resource "aws_lb_target_group_attachment" "tg_attach" {
 
 resource "aws_instance" "f5_bigip" {
   # determine the number of BIG-IPs to deploy
+  count         = var.f5_instance_count
   instance_type = var.ec2_instance_type
   ami           = data.aws_ami.f5_ami.id
   key_name      = var.ec2_key_name == "~/.ssh/id_rsa.pub" ? aws_key_pair.instane_key.key_name : var.ec2_key_name

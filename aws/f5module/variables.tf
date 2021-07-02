@@ -82,6 +82,12 @@ variable f5_ami_search_name {
   #default = "F5 Networks BIGIP-14.0.1-0.0.14 PAYG - Best 1Gbps - 20190817094829-929ca0d8-c2d7-4068-8f9a-eb75a677afed-ami-047292a9177e2e328.4"
 }
 
+variable f5_instance_count {
+  description = "Number of BIG-IPs to deploy"
+  type        = number
+  default     = 1
+}
+
 variable ec2_instance_type {
   description = "AWS EC2 instance type"
   type        = string
