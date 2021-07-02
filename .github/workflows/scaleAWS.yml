@@ -94,7 +94,7 @@ jobs:
       - name: get consul server parameters
         id: consul_params
         run: |
-          echo ::set-output name=consul_server::$(cat configs/consul_server.cfg)
+          echo ::set-output name=consul_server::$(cat aws/consul_server.cfg)
       
       - name: check if another running already
         id: get_is_running
@@ -301,8 +301,7 @@ jobs:
         with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        # aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }} # if you have/need it
-        aws-region: us-east-2
+        aws-region: us-west-1
 
       - name: initialize terraform environment
         uses: hashicorp/setup-terraform@v1
