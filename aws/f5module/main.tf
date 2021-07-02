@@ -397,8 +397,9 @@ resource "aws_key_pair" "instane_key" {
 #
 
 resource "aws_lb_target_group_attachment" "tg_attach" {
+  count = var.f5_instance_count
   target_group_arn = var.tg_arn
-  target_id        = aws_instance.f5_bigip.id
+  target_id        = aws_instance.f5_bigip[count.index].id
   port             = 443
 }
 
