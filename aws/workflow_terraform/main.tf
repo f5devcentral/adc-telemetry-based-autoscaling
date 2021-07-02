@@ -335,7 +335,7 @@ resource "aws_key_pair" "instance_key" {
 resource "aws_instance" "consulvm" {
   ami                         = data.aws_ami.ubuntu.id
   #availability_zone          = "${var.region}${var.aws_region_az}"
-  instance_type               = "t2.medium"
+  instance_type               = "t3.micro"
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
@@ -475,7 +475,7 @@ data "template_file" "alertfwd" {
 resource "aws_instance" "alertforwardervm" {
   ami                         = data.aws_ami.ubuntu.id
   #availability_zone          = "${var.region}${var.aws_region_az}"
-  instance_type               = "t2.medium"
+  instance_type               = "t2.meicro"
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id

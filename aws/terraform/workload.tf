@@ -15,7 +15,7 @@ resource "aws_instance" "backendapp" {
   count                       = var.workload_count
   ami                         = data.aws_ami.ubuntu.id
   #availability_zone          = "${var.region}${var.aws_region_az}"
-  instance_type               = "t2.medium"
+  instance_type               = "t3.micro"
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
