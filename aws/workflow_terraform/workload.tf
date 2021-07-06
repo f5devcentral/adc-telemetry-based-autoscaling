@@ -19,8 +19,8 @@ resource "aws_instance" "backendapp" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
-  key_name                    = var.ec2_key_name2 == "~/.ssh/id_rsa.pub" ? aws_key_pair.instance_key.key_name : var.ec2_key_name2
- 
+  key_name                    = var.ec2_key_name
+
   root_block_device {
     delete_on_termination = true
   }

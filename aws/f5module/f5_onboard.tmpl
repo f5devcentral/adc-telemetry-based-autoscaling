@@ -26,9 +26,6 @@ runtime_parameters:
   - name: USER_NAME
     type: static
     value: ${bigip_username}
-  - name: SSH_KEYS
-    type: static
-    value: "${ssh_keypair}"
 EOF
 
 if ${aws_secretmanager_auth}
@@ -104,6 +101,19 @@ extension_services:
             - 1.pool.ntp.org
             - 2.pool.ntp.org
             timezone: ${timezone}
+          admin:
+            class: User
+            userType: regular
+            password: ${bigip_password}
+            shell: bash
+          ${bigip_username}:
+            class: User
+            userType: regular
+            password: ${bigip_password}
+            shell: bash
+            partitionAccess:
+              all-partitions:
+                role: admin
           myProvisioning:
             class: Provision
             ltm: nominal

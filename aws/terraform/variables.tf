@@ -1,4 +1,4 @@
-variable splunkIP {
+ variable splunkIP {
   type = string
 }    
 

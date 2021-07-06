@@ -192,16 +192,6 @@ module "mgmt-network-security-group" {
 
 }
 
-resource "tls_private_key" "example" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "generated_key" {
-  key_name   = format("%s-%s", local.app_id, var.ec2_key_name)
-  public_key = tls_private_key.example.public_key_openssh
-}
-
 #
 # Create BIG-IP
 #
@@ -214,6 +204,7 @@ module bigip {
   mgmt_subnet_ids        = [{ "subnet_id" = aws_subnet.mgmt.id, "public_ip" = true, "private_ip_primary" = "" }]
   mgmt_securitygroup_ids = [module.mgmt-network-security-group.security_group_id]
   app_name                  = var.app_name
+  ec2_key_name              = var.ec2_key_name
   consul_ip                 = aws_instance.consulvm.private_ip
   hostname                  = local.hostname
   app_id                    = local.app_id
@@ -310,21 +301,10 @@ data "aws_ami" "ubuntu" {
   owners = ["679593333241"] # Canonical
 }
 
-variable ec2_key_name2 {
-  description = "AWS EC2 Key name for SSH access"
-  type        = string
-  default     = "~/.ssh/id_rsa.pub"
-}
-
 variable aws_iam_instance_profile {
   description = "aws_iam_instance_profile"
   type        = string
   default     = null
-}
-
-resource "aws_key_pair" "instance_key" {
-  key_name   = format("%s-key", local.app_id)
-  public_key = file("~/.ssh/id_rsa.pub")
 }
 
 #
@@ -338,8 +318,8 @@ resource "aws_instance" "consulvm" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
-  key_name                    = var.ec2_key_name2 == "~/.ssh/id_rsa.pub" ? aws_key_pair.instance_key.key_name : var.ec2_key_name2
- 
+  key_name                    = var.ec2_key_name
+
   root_block_device {
     delete_on_termination = true
   }
@@ -413,14 +393,10 @@ resource "consul_keys" "app" {
     path  = format("adpm/applications/%s/scaling/is_running", local.app_id)
     value = "false"
   } 
-  #key {
-  #  path  = format("adpm/applications/%s/terraform/outputs/bigip_mgmt", local.app_id)
-  #  value = "https://${module.bigip.0.mgmtPublicIP}:8443"
-  #}
-  #key {
-  #  path  = format("adpm/applications/%s/terraform/outputs/application_address", local.app_id )
-  #  value = "https://${azurerm_public_ip.nlb_public_ip.ip_address}"
-  #}
+  key {
+    path  = format("adpm/applications/%s/terraform/outputs/application_address", local.app_id )
+    value = "https://${aws_eip.nlb_pip.public_ip}"
+  }
   key {
     path  = format("adpm/applications/%s/github_owner", local.app_id)
     value = var.github_owner
@@ -478,8 +454,8 @@ resource "aws_instance" "alertforwardervm" {
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
-  key_name                    = var.ec2_key_name2 == "~/.ssh/id_rsa.pub" ? aws_key_pair.instance_key.key_name : var.ec2_key_name2
- 
+  key_name                    = var.ec2_key_name
+  
   root_block_device {
     delete_on_termination = true
   }
