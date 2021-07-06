@@ -27,7 +27,8 @@ jobs:
       law_primarykey: ${{ steps.current.outputs.law_primarykey }}
       location: ${{ steps.current.outputs.location }}
       repo_path: ${{ steps.current.outputs.repo_path }}
-      github_owner: ${{ steps.current.outputs.github_owner }}      
+      github_owner: ${{ steps.current.outputs.github_owner }}   
+      key_name: ${{ steps.current.outputs.key_name }}
     steps:
       - name: Dump GitHub context
         env:
@@ -139,6 +140,8 @@ jobs:
           echo ::set-output name=github_owner::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/github_owner)
           
           echo ::set-output name=repo_path::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/repo_path)
+
+          echo ::set-output name=key_name::$(consul kv get -http-addr=${{ steps.consul_params.outputs.consul_server }} adpm/applications/${{ steps.client_payload_data.outputs.app_id}}/key_name)
 
       - name: output last modified times
         id: seconds
@@ -339,12 +342,12 @@ jobs:
       - name: terraform plan
         run: |
           cd ./aws/workflow_terraform
-          terraform plan -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
+          terraform plan -var 'ec2_key_name=${{ needs.setup.outputs.key_name }}' -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
        
       - name: terraform apply
         run: |
           cd ./aws/workflow_terraform
-          terraform apply --auto-approve -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
+          terraform apply -var 'ec2_key_name=${{ needs.setup.outputs.key_name }}' --auto-approve -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
     
       - name: terraform output
         run: |
