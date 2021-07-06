@@ -375,7 +375,7 @@ resource "consul_keys" "app" {
   }
   key {
     path  = format("adpm/applications/%s/scaling/workload/current_count", local.app_id)
-    value = var.workload_count
+    value = local.workload_count
   }
   key {
     path  = format("adpm/applications/%s/create_timestamp", local.app_id)
