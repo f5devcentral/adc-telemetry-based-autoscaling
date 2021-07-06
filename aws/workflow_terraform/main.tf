@@ -454,7 +454,7 @@ data "template_file" "alertfwd" {
 resource "aws_instance" "alertforwardervm" {
   ami                         = data.aws_ami.ubuntu.id
   #availability_zone          = "${var.region}${var.aws_region_az}"
-  instance_type               = "t2.meicro"
+  instance_type               = "t2.micro"
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
