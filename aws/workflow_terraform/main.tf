@@ -433,6 +433,10 @@ resource "consul_keys" "app" {
     path  = format("adpm/applications/%s/location", local.app_id )
     value = var.region
   }
+  key {
+    path  = format("adpm/applications/%s/key_name", local.app_id )
+    value = var.ec2_key_name
+  }
 }
 
 #
