@@ -408,7 +408,11 @@ resource "aws_instance" "f5_bigip" {
   count         = var.f5_instance_count
   instance_type = var.ec2_instance_type
   ami           = data.aws_ami.f5_ami.id
-  #key_name      = var.ec2_key_name == "~/.ssh/id_rsa.pub" ? aws_key_pair.instane_key.key_name : var.ec2_key_name
+  key_name     = var.ec2_key_name
+  
+  lifecycle {
+    ignore_changes = [user_data]
+  }
 
   root_block_device {
     delete_on_termination = true

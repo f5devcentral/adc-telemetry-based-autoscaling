@@ -233,19 +233,6 @@ resource "null_resource" "clusterDO" {
   depends_on = [module.bigip]
 }
 
-data "template_file" "tfstate" {
-  template          = file("../../templates/tfstate.tpl")
-  vars = {
-    app_id              = local.app_id
-    consul_ip           = aws_instance.consulvm.public_ip
-  }
-}
-
-resource "local_file" "tfstate" {
-  content  = data.template_file.tfstate.rendered
-  filename = "tfstate.tf"
-}
-
 #
 # Deploy AWS NLB 
 #
