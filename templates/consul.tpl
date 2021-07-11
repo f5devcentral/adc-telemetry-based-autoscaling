@@ -60,7 +60,7 @@ cat << EOF > /etc/consul.d/server.json
   "log_level": "DEBUG",
   "server": true,
   "addresses": {
-    "http": "0.0.0.0.0",
+    "http": "0.0.0.0",
     "https": "0.0.0.0"
   },
   "verify_incoming": false,
