@@ -52,6 +52,12 @@ variable app_name {
   default = "sample_app"
 }
 
+variable consul_ip {
+  type        = string
+  description = "private address assigned to consul server"
+  default     = "10.0.1.225"
+}
+
 variable github_token {
   type        = string
   description = "repo token required to update secrets"

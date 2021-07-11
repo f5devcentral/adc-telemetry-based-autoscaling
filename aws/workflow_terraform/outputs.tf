@@ -13,12 +13,13 @@ output "c_application_address" {
 }
 
 output "d_consul_public_address" {
-   value = "http://${aws_instance.consulvm.public_ip}:8500"
+   value = "https://${aws_instance.consulvm.public_ip}:8443"
  }
 
 output "e_alertForwarder_public_address" {
-   value = "https://${aws_instance.alertforwardervm.public_ip}:8000"
+   value = "https://${aws_instance.consulvm.public_ip}:8000"
 }
+
 
 # BIG-IP Username
 output admin_name {

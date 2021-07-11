@@ -73,6 +73,12 @@ variable github_owner {
   default     = ""
 }
 
+variable consul_ip {
+  type        = string
+  description = "private address assigned to consul server"
+  default     = "10.0.1.225"
+}
+
 variable repo_path {
   type        = string
   description = "repo path for github actions"

@@ -17,7 +17,7 @@ resource "github_repository_file" "adpm" {
   repository          = "adc-telemetry-based-autoscaling"
   branch              = "main"
   file                = "azure/consul_server.cfg"
-  content             = format("http://%s:8500", azurerm_public_ip.consul_public_ip.ip_address)
+  content             = format("https://%s:8443", azurerm_public_ip.consul_public_ip.ip_address)
   commit_message      = format("file contents update by application ID: %s", local.app_id)
   overwrite_on_create = true
 }
@@ -27,7 +27,9 @@ provider azurerm {
 }
 
 provider "consul" {
-  address = "${azurerm_public_ip.consul_public_ip.ip_address}:8500"
+  address = "${azurerm_public_ip.consul_public_ip.ip_address}:8443"
+  scheme  = "https" 
+  insecure_https  = true
 }
 
 #
@@ -364,7 +366,7 @@ resource "azurerm_virtual_machine" "app" {
 }
 
 #
-# Create consul server
+# Deploy Consul/alertForwarder Server
 #
  resource "azurerm_public_ip" "consul_public_ip" {
   name                = "pip-mgmt-consul"
@@ -398,6 +400,16 @@ resource "azurerm_network_interface" "consulvm-ext-nic" {
   }
 }
 
+data "template_file" "consul" {
+  template      = file("../../templates/consul.tpl")
+  vars = {
+    consul_ip       = var.consul_ip
+    consul_ver      = "1.9.0"    
+    github_token    = var.github_token
+    repo_path       = var.repo_path
+  }
+}
+
 resource "azurerm_virtual_machine" "consulvm" {
   name                  = "consulvm"
   location              = var.location
@@ -427,9 +439,9 @@ resource "azurerm_virtual_machine" "consulvm" {
 
   os_profile {
     computer_name  = "consulvm"
-    admin_username = "consuluser"
+    admin_username = "ubuntu"
     admin_password = var.upassword
-    custom_data    = file("../../scripts/consul.sh")
+    custom_data    =  data.template_file.consul.rendered
 
   }
 
@@ -511,108 +523,5 @@ resource "consul_keys" "app" {
   key {
     path  = format("adpm/applications/%s/terraform/outputs/application_address", local.app_id )
     value = "https://${azurerm_public_ip.nlb_public_ip.ip_address}"
-  }
-}
-
-
-#
-#  Create Alert Forwarder
-#
-
-data "template_file" "alertfwd" {
-  template          = file("../../templates/alertfwd.tpl")
-  vars = {
-    github_token    = var.github_token
-    repo_path       = var.repo_path
-  }
-}
-
-resource "azurerm_public_ip" "af_public_ip" {
-  name                = "pip-mgmt-af"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Static"   # Static is required due to the use of the Standard sku
-  tags = {
-    Name   = "pip-mgmt-af"
-    source = "terraform"
-  }
-}
-
-data  "azurerm_public_ip" "af_public_ip" {
-  name                = azurerm_public_ip.af_public_ip.name
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_network_interface" "afvm-ext-nic" {
-  name               = "${local.app_id}-afvm-ext-nic"
-  location           = var.location
-  resource_group_name = azurerm_resource_group.rg.name
-  ip_configuration {
-    name                          = "primary"
-    subnet_id                     =  data.azurerm_subnet.mgmt.id
-    private_ip_address_allocation = "Static"
-    private_ip_address            = "10.2.1.150"
-    primary                       = true
-    public_ip_address_id          = azurerm_public_ip.af_public_ip.id
-  }
-
-  tags = {
-    Name        = "${local.app_id}-afvm-ext-int"
-    application = "afserver"
-    tag_name    = "Env"
-    value       = "af"
-  }
-}
-
-resource "azurerm_virtual_machine" "afvm" {
-  name                  = "afvm"
-  location              = var.location
-  resource_group_name   = azurerm_resource_group.rg.name
-  network_interface_ids = [azurerm_network_interface.afvm-ext-nic.id]
-  vm_size               = "Standard_DS3_v2"
-
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  delete_os_disk_on_termination = true
-
-  # Uncomment this line to delete the data disks automatically when deleting the VM
-  delete_data_disks_on_termination = true
-  
-  storage_os_disk {
-    name              = "afvmOsDisk"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Premium_LRS"
-  }
-  
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04.0-LTS"
-    version   = "latest"
-  }
-
-  os_profile {
-    computer_name  = "afvm"
-    admin_username = "ubuntu"
-    admin_password = var.upassword
-    custom_data    = data.template_file.alertfwd.rendered
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-  tags = {
-    Name                = "${local.app_id}-afvm"
-    tag_name            = "Env"
-    value               = "af"
-    propagate_at_launch = true
-  }
-
-  connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      password = var.upassword
-      host     = data.azurerm_public_ip.af_public_ip.ip_address
   }
 }

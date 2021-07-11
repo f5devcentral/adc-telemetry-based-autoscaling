@@ -29,7 +29,7 @@ resource "github_repository_file" "adpm" {
   repository          = "adc-telemetry-based-autoscaling"
   branch              = "main"
   file                = "aws/consul_server.cfg"
-  content             = format("http://%s:8500", aws_instance.consulvm.public_ip)
+  content             = format("https://%s:8443", aws_instance.consulvm.public_ip)
   commit_message      = format("file contents update by application ID: %s", local.app_id)
   overwrite_on_create = true
 }
@@ -318,13 +318,24 @@ variable aws_iam_instance_profile {
 }
 
 #
-# Deploy Consul Server
+# Deploy Consul/alertForwarder Server
 #
+
+data "template_file" "consul" {
+  template          = file("../../templates/consul.tpl")
+  vars = {
+    consul_ip       = var.consul_ip
+    consul_ver      = "1.9.0"    
+    github_token    = var.github_token
+    repo_path       = var.repo_path
+  }
+}
 
 resource "aws_instance" "consulvm" {
   ami                         = data.aws_ami.ubuntu.id
   #availability_zone          = "${var.region}${var.aws_region_az}"
   instance_type               = "t3.micro"
+  private_ip                  = var.consul_ip
   associate_public_ip_address = true
   vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
   subnet_id                   = aws_subnet.mgmt.id
@@ -335,7 +346,7 @@ resource "aws_instance" "consulvm" {
   }
 
   iam_instance_profile = var.aws_iam_instance_profile
-  user_data            = file("../../scripts/consul.sh")
+  user_data            = data.template_file.consul.rendered
   provisioner "local-exec" {
     #command = "aws ec2 wait instance-status-ok --instance-ids ${aws_instance.consulvm.id} --region ${var.region}"
     command = "sleep 300"
@@ -349,11 +360,13 @@ resource "aws_instance" "consulvm" {
 }
 
 #
-# Update consul server'
+# Update consul server
 #
 
 provider "consul" {
-  address = "${aws_instance.consulvm.public_ip}:8500"
+  address = "${aws_instance.consulvm.public_ip}:8443"
+  scheme = "https"
+  insecure_https  = true
 }
 
 resource "consul_keys" "app" {
@@ -448,42 +461,3 @@ resource "consul_keys" "app" {
     value = var.ec2_key_name
   }
 }
-
-#
-# Deploy Alert Forwarder
-#
-
-data "template_file" "alertfwd" {
-  template          = file("../../templates/alertfwd.tpl")
-  vars = {
-    github_token    = var.github_token
-    repo_path       = var.repo_path
-  }
-}
-
-resource "aws_instance" "alertforwardervm" {
-  ami                         = data.aws_ami.ubuntu.id
-  #availability_zone          = "${var.region}${var.aws_region_az}"
-  instance_type               = "t2.micro"
-  associate_public_ip_address = true
-  vpc_security_group_ids      = [module.mgmt-network-security-group.security_group_id]
-  subnet_id                   = aws_subnet.mgmt.id
-  key_name                    = var.ec2_key_name
-
-  root_block_device {
-    delete_on_termination = true
-  }
-
-  iam_instance_profile = var.aws_iam_instance_profile
-  user_data            = data.template_file.alertfwd.rendered
-  provisioner "local-exec" {
-    command = "sleep 300"
-  }
- 
-  tags = {
-    "Owner"               = "Canonical"
-    "Name"                = "${local.app_id}-alertForwarder-vm"
-    "KeepInstanceRunning" = "false"
-  }
-}
-
