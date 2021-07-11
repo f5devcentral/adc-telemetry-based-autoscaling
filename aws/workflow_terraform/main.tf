@@ -346,12 +346,6 @@ resource "aws_instance" "consulvm" {
 # Update consul server
 #
 
-provider "consul" {
-  address = "${aws_instance.consulvm.public_ip}:8443"
-  scheme  = "https" 
-  insecure_https  = true
-}
-
 resource "consul_keys" "app" {
   datacenter = "dc1"
   # Set the CNAME of our load balancer as a key
