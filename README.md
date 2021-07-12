@@ -18,6 +18,8 @@ The solution utilizes various third-party technologies/services along with F5’
 ### GitHub Secrets
 Create the following [GitHub secrets](https://docs.github.com/en/actions/reference/encrypted-secrets).  The secrets will be utilized by the actions workflow to securely update the deployment. Depending upon which cloud you deploy into, you will need to provide either an [AWS access key and corresponding secret](https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/) or [Azure service prinicipal credentials](https://github.com/marketplace/actions/azure-login) as well as a [GitHub acces token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your repository.
 
+
+#### Required for all deployments 
 - GH_TOKEN   - *ex: ghp_mkqCzxBci0Sl3.......rY
 
 #### Required for AWS deployments 
