@@ -20,16 +20,16 @@ Create the following [GitHub secrets](https://docs.github.com/en/actions/referen
 
 - GH_TOKEN   - *ex: ghp_mkqCzxBci0Sl3.......rY
 
+#### Required for AWS deployments 
+- AWS_ACCESS_KEY_ID - *ex: AKIATXXXXXXXXXXXXXXX
+- AWS_SECRET_ACCESS_KEY - *ex: kkLeijGuHYXXXXXXXXXXXXXXXXXXXXXXXXX
+
 #### Required for Azure deployments 
 - AZURE_CLIENT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_CLIENT_SECRET   - *ex: XXXXXXXXXXXXXXXXXXXXXXXXXXX
 - AZURE_SUBSCRIPTION_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_TENANT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_CREDS  - Comination of the above in JSON format  -  *ex: {"clientId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",  "clientSecret": "XXXXXXXXXXXXXXXXXXXXXXXX", "subscriptionId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "tenantId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"}*
-
-#### Required for AWS deployments 
-- AWS_ACCESS_KEY_ID - *ex: AKIATXXXXXXXXXXXXXXX
-- AWS_SECRET_ACCESS_KEY - *ex: kkLeijGuHYXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ### Terraform Variables
 
