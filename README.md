@@ -37,8 +37,8 @@ Create the following [GitHub secrets](https://docs.github.com/en/actions/referen
 
 The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
 
-- location (**Azure Deployments**) = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
-- region (**AWS Deployments**) = The AWS region where the application infrastructure will be deployed   - *ex: "us-west-1"*
+- location *(**Azure Deployments only**)* = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
+- region *(**AWS Deployments only**)* = The AWS region where the application infrastructure will be deployed   - *ex: "us-west-1"*
 - github_owner = Github Account hosting the repository   -  *ex: "f5devcentral"*
 - repo_path =     -  *ex: "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"*
 - github_token =   -  *ex: "ghp_mkqCzxBci0Sl3.......rY"
@@ -55,7 +55,7 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 - logStashIP      = Optional - IP address of Logstash service.  TS declaration assumes logstash listening on default port of **8080** and using HTTP
 - law_id          = Optional - Azure log analytics workspace ID
 - law_primarykey  = Optional - Azure log analytics workspace primary key
-- ec2_key_name (**AWS Deployments only**)  = Name of an existing AWS [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) - *ex: "glckey"*
+- ec2_key_name *(**AWS Deployments only**)*  = Name of an existing AWS [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) - *ex: "glckey"*
 
 In addition to the above variables, the solution derives and sets two key local values, (hostname & app_id). The app_id is randomly generated and unique to the deployment. The hostname is assigned to all BIG-IP instances in the cluster with a format of - "*bigip.<cloud>.<app_id>.com*"  - example: *bigip.azure.cd5e.com*
 
