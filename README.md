@@ -62,7 +62,7 @@ In addition to the above variables, the solution derives and sets two key local 
 ### Deploying the Solution
 1. Duplicate the repo - Since the solution relies on Github Actions for orchestration it will be necessary to first [duplcate the repo](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-on-github/duplicating-a-repository) into a Github account under your control.  Clone the newly created repo locally to perform the initial app infrastructure deployment.
 
-1. Complete the 'terraform.tfvars' entries using the above noted examples.
+1. Complete the *'terraform.tfvars'* file entries using the above noted examples.
 
 1. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
 
