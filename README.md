@@ -64,6 +64,8 @@ In addition to the above variables, the solution derives and sets two key local 
 
 1. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
 
+1. Complete the 'terraform.tfvars' entries using the above noted examples.
+
 1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - *deploy.sh*.  Specify the desired destination cloud using the *-c* flag.  For example, to deploy to azure execute **sh deploy.sh -c azure** or for AWS execute **sh deploy.sh -c aws**. 
 
 The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).  
