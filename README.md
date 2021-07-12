@@ -11,12 +11,12 @@ The solution utilizes various third-party technologies/services along with F5’
    - **F5 Declarative Onboarding**, (DO) and **Application Services 3 Extension**, (AS3) to deploy to configure BIG-IP application services
    - **F5 Telemetry Streaming**, (TS) to stream telemetry data to a third party analytics provider
    - **GitHub Actions** for workflow automation 
-   - **Azure** public cloud for application hosting
+   - **Azure or AWS** public clouds for application hosting
    - **Third-party Analytics Provider**, (integrated with BIG-IP(s) via TS) for monitoring and alerting, (environment includes and ELK stack trial for testing/demo purposes)
 
 
 ### GitHub Secrets
-Create the following [GitHub secrets](https://docs.github.com/en/actions/reference/encrypted-secrets).  The secrets will be utilized by the actions workflow to securely update the Azure deployment. You will need to provide [Azure service prinicipal credentials](https://github.com/marketplace/actions/azure-login) as well as a [GitHub acces token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your repository.
+Create the following [GitHub secrets](https://docs.github.com/en/actions/reference/encrypted-secrets).  The secrets will be utilized by the actions workflow to securely update the deployment. Depending upon which cloud you deploy into, you will need to provide either [AWS access key and corresponding secret](https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/) or [Azure service prinicipal credentials](https://github.com/marketplace/actions/azure-login) as well as a [GitHub acces token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your repository.
 
 - GH_TOKEN   - *ex: ghp_mkqCzxBci0Sl3.......rY
 
@@ -71,7 +71,7 @@ With the Terraform deployment completed, you should be presented with outputs si
 
 
 ### The AlertForwarder service
-The AlertForwwarder (AF) is a simple NodeJS service that is deployed on an Ubuntu virtual machine instance as part of the application infrastructure The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow.
+The AlertForwwarder (AF) is a simple NodeJS service that is deployed on the Consul virtual machine instance as part of the application infrastructure.  The service's sole purpose is to receive alerts; (webhooks) from the analytics vendor, (currently Splunk, ELK, and/or Azure Log Analytics), normalize the webhook payload, and securely proxy the call to trigger the GitHub action workflow.
   
 The AF service exposes a single endpoint, (*https://<AF_IPaddress>:8000*) to receive incoming webhook calls.  Refer to the deployment output for the AF endpoint address.  You will configure your analytic provider(s) to send webhooks, (*triggered via alerts*) to this address.
 
