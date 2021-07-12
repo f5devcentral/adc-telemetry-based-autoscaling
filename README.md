@@ -19,18 +19,24 @@ The solution utilizes various third-party technologies/services along with F5’
 Create the following [GitHub secrets](https://docs.github.com/en/actions/reference/encrypted-secrets).  The secrets will be utilized by the actions workflow to securely update the Azure deployment. You will need to provide [Azure service prinicipal credentials](https://github.com/marketplace/actions/azure-login) as well as a [GitHub acces token](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token) for your repository.
 
 - GH_TOKEN   - *ex: ghp_mkqCzxBci0Sl3.......rY
+
+#### Required for Azure deployments 
 - AZURE_CLIENT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_CLIENT_SECRET   - *ex: XXXXXXXXXXXXXXXXXXXXXXXXXXX
 - AZURE_SUBSCRIPTION_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_TENANT_ID   - *ex: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 - AZURE_CREDS  - Comination of the above in JSON format  -  *ex: {"clientId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",  "clientSecret": "XXXXXXXXXXXXXXXXXXXXXXXX", "subscriptionId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "tenantId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"}*
 
+#### Required for AWS deployments 
+- AWS_ACCESS_KEY_ID - *ex: AKIATXXXXXXXXXXXXXXX
+- AWS_SECRET_ACCESS_KEY - *ex: kkLeijGuHYXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ### Terraform Variables
 
 The following variables, (*located in ./terraform/terraform.tfvars*) should be modified as necessary.
 
-- location = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
+- location *(Azure Deployments)* = The Azure region where the application infrastructure will be deployed   -  *default: "eastus"*
+- region *(AWS Deployments)* = The AWS region where the application infrastructure will be deployed   - *ex: "us-west-1"*
 - github_owner = Github Account hosting the repository   -  *ex: "f5devcentral"*
 - repo_path =     -  *ex: "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"*
 - github_token =   -  *ex: "ghp_mkqCzxBci0Sl3.......rY"
@@ -55,7 +61,9 @@ In addition to the above variables, the solution derives and sets two key local 
 
 1. Authenticate to Azure using [Azure CLI](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/azure_cli)
 
-1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - (*sh ./deploy.sh*).  The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).  
+1. Navigate to the scripts directory, (*adc-telemetry-based-autoscaling/azure/scripts/*) and execute the deployment script - *deploy.sh*.  Specify the desired destination cloud using the *-c* flag.  For example, to deploy to azure execute *sh deploy.sh -c azure* or for AWS execute *sh deploy.sh -c aws*. 
+
+The deployment script executes the Terraform project as illustrated above and migrates the local Terraform state to remote state located on the newly created Hashicorp Consul server.  The GitHub runners will reference the migrated state and repo-hosted terraform to perform infrastructure updates, (*scaling operations*).  
   
 With the Terraform deployment completed, you should be presented with outputs similar to below.  The outputs provide the endpoints to interact with environment.  Before continuing on to the next steps, (configuring alerts) take a few minutes to familiarize yourself with the environment.
 
