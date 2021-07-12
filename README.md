@@ -55,6 +55,7 @@ The following variables, (*located in ./terraform/terraform.tfvars*) should be m
 - logStashIP      = Optional - IP address of Logstash service.  TS declaration assumes logstash listening on default port of **8080** and using HTTP
 - law_id          = Optional - Azure log analytics workspace ID
 - law_primarykey  = Optional - Azure log analytics workspace primary key
+- ec2_key_name *(AWS Deployments)*  = Name of an existing AWS [key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) - *ex: "glckey"*
 
 In addition to the above variables, the solution derives and sets two key local values, (hostname & app_id). The app_id is randomly generated and unique to the deployment. The hostname is assigned to all BIG-IP instances in the cluster with a format of - "*bigip.<cloud>.<app_id>.com*"  - example: *bigip.azure.cd5e.com*
 
