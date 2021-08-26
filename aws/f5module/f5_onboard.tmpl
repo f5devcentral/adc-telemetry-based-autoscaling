@@ -358,3 +358,4 @@ bash /var/config/rest/downloads/f5-bigip-runtime-init.gz.run -- '--cloud aws'
 # Run
 # export F5_BIGIP_RUNTIME_INIT_LOG_LEVEL=silly
 f5-bigip-runtime-init --config-file /config/cloud/runtime-init-conf.yaml
+tmsh modify analytics global-settings { external-logging-publisher /DemoTenant/${app_name}/telemetry_publisher offbox-protocol hsl use-offbox enabled  }
