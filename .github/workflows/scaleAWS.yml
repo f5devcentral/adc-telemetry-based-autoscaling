@@ -342,12 +342,12 @@ jobs:
       - name: terraform plan
         run: |
           cd ./aws/workflow_terraform
-          terraform plan -var 'ec2_key_name=${{ needs.setup.outputs.key_name }}' -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
+          terraform plan -var 'ec2_key_name=${{ needs.setup.outputs.key_name }}' -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'repo_path=${{ needs.setup.outputs.repo_path}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
        
       - name: terraform apply
         run: |
           cd ./aws/workflow_terraform
-          terraform apply -var 'ec2_key_name=${{ needs.setup.outputs.key_name }}' --auto-approve -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
+          terraform apply -var 'ec2_key_name=${{ needs.setup.outputs.key_name }}' --auto-approve -var 'github_owner=${{ needs.setup.outputs.github_owner}}' -var 'repo_path=${{ needs.setup.outputs.repo_path}}' -var 'law_primarykey=${{ needs.setup.outputs.law_primarykey }}' -var 'logStashIP=${{ needs.setup.outputs.logStashIP }}' -var 'law_id=${{ needs.setup.outputs.law_id }}' -var 'splunkHEC=${{ needs.setup.outputs.splunkHEC }}' -var 'splunkIP=${{ needs.setup.outputs.splunkIP }}' -var 'region=${{ needs.setup.outputs.location }}' -var 'ts_consumer=${{ needs.setup.outputs.ts_consumer }}' -var 'github_token=${{ secrets.GH_TOKEN }}'
     
       - name: terraform output
         run: |
