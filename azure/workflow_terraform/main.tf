@@ -27,9 +27,9 @@ provider azurerm {
 }
 
 provider "consul" {
-  address = "${azurerm_public_ip.consul_public_ip.ip_address}:8443"
-  scheme  = "https" 
-  insecure_https  = true
+  address = "${azurerm_public_ip.consul_public_ip.ip_address}:8500"
+  scheme  = "http" 
+  #insecure_https  = true
 }
 
 #
