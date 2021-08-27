@@ -1,1 +1,1 @@
-"http://${consul_ip}:8500"
+"https://${consul_ip}:8443"
