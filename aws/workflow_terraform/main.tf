@@ -299,9 +299,9 @@ variable aws_iam_instance_profile {
 #
 
 provider "consul" {
-  address = "${aws_instance.consulvm.public_ip}:8500"
-  scheme = "http"
-  #insecure_https  = true
+  address = "${aws_instance.consulvm.public_ip}:8443"
+  scheme = "https"
+  insecure_https  = true
 }
 
 data "template_file" "consul" {
