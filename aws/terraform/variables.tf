@@ -82,7 +82,7 @@ variable consul_ip {
 variable repo_path {
   type        = string
   description = "repo path for github actions"
-  default     = "/repos/f5devcentral/adc-telemetry-based-autoscaling/dispatches"
+  default     = ""
 }
 
 variable ubuntu_ami_search_name {
