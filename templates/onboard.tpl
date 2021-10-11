@@ -75,7 +75,7 @@ curl -L -k -o ${libs_dir}/$DO_FN $DO_URL
 echo -e "\n"$(date) "Download Application Services 3 (AS3) Pkg"
 curl -L -k -o ${libs_dir}/$AS3_FN $AS3_URL
 
-sleep 10
+sleep 300
 
 # Copy the RPM Pkg to the file location
 cp ${libs_dir}/*.rpm /var/config/rest/downloads/
